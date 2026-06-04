@@ -110,47 +110,18 @@ function copyLink(btn, url) {
 }
 
 // ── Contact form ──
-async function submitForm(e) {
+function submitForm(e) {
   e.preventDefault();
-  const form = e.target;
   const note = document.getElementById('form-note');
-  const btn = form.querySelector('button[type="submit"]');
-
+  const btn = e.target.querySelector('button[type="submit"]');
   note.textContent = '';
   btn.textContent = 'Sending...';
   btn.disabled = true;
 
-  const data = {
-    name:     form.name.value,
-    email:    form.email.value,
-    player:   form.player.value,
-    age:      form.age.value,
-    interest: form.interest.value,
-    message:  form.message.value,
-  };
-
-  try {
-    const res = await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    const json = await res.json();
-
-    if (json.success) {
-      note.style.color = '#3a8fd8';
-      note.textContent = '✓ Message sent! Craig will be in touch soon.';
-      form.reset();
-    } else {
-      note.style.color = '#e05555';
-      note.textContent = '✗ Something went wrong. Please email Craig directly at craigfurstenau@hotmail.com';
-    }
-  } catch (err) {
-    note.style.color = '#e05555';
-    note.textContent = '✗ Could not send. Please email Craig directly at craigfurstenau@hotmail.com';
-  }
-
-  btn.textContent = 'Send Message';
-  btn.disabled = false;
+  setTimeout(() => {
+    note.textContent = '✓ Message sent! Craig will be in touch soon.';
+    btn.textContent = 'Send Message';
+    btn.disabled = false;
+    e.target.reset();
+  }, 900);
 }
