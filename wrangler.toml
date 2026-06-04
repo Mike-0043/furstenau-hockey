@@ -1,0 +1,9 @@
+name = "furstenau-hockey"
+compatibility_date = "2024-01-01"
+
+# Static assets served from root
+# Pages Functions live in /functions/
+
+[env.production]
+# Set RESEND_API_KEY in the Cloudflare Pages dashboard:
+# Pages → furstenau-hockey → Settings → Environment variables
