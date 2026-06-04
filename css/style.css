@@ -145,14 +145,14 @@ p { color: var(--text); }
 .logo { display: flex; flex-direction: column; line-height: 1.1; }
 .logo-main {
   font-family: var(--font-head);
-  font-size: 17px;
+  font-size: 24px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--white);
 }
 .logo-sub {
-  font-size: 8.5px;
-  letter-spacing: 0.2em;
+  font-size: 10px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--blue-light);
 }
