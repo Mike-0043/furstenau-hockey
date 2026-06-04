@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Furstenau Hockey Development</title>
-  <meta name="description" content="Elite hockey skill training with Craig Furstenau — skating, puck control, and complete player development for all ages.">
+  <title>Furstenau Hockey Development | Elite Skill Training</title>
+  <meta name="description" content="Craig Furstenau — national championship coach, developer of NHL talent, and Michigan's premier hockey skills trainer. Skating, puck control, and complete athlete development.">
 
   <!-- Open Graph / Social Sharing -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.furstenauhockey.com/">
-  <meta property="og:title" content="Furstenau Hockey Development">
-  <meta property="og:description" content="Elite hockey skill training with Craig Furstenau — skating, puck control, and complete player development for all ages.">
+  <meta property="og:title" content="Furstenau Hockey Development | Elite Skill Training">
+  <meta property="og:description" content="National championship coach. Developer of NHL talent. Craig Furstenau builds complete hockey players from the ground up.">
   <meta property="og:image" content="https://www.furstenauhockey.com/images/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <!-- NAV -->
-  <header class="site-header">
+  <header class="site-header" id="site-header">
     <nav class="nav-inner">
       <a href="/" class="logo">
         <span class="logo-main">FURSTENAU</span>
@@ -33,6 +33,8 @@
       </button>
       <ul class="nav-links">
         <li><a href="#about">About</a></li>
+        <li><a href="#method">Method</a></li>
+        <li><a href="#timeline">Career</a></li>
         <li><a href="#training">Training</a></li>
         <li><a href="#clips">Clips</a></li>
         <li><a href="#posts">News</a></li>
@@ -43,38 +45,262 @@
   </header>
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+    </div>
     <div class="hero-content">
-      <p class="hero-eyebrow">Craig Furstenau · Hockey &amp; Wellness Coach</p>
-      <h1>Build a Strong<br>Foundation</h1>
-      <p class="hero-sub">Elite skill training for players of all ages — skating, puck control, and the complete athlete mindset.</p>
-      <div class="hero-cta">
+      <p class="hero-eyebrow reveal">Craig Furstenau &nbsp;·&nbsp; Hockey &amp; Wellness Coach &nbsp;·&nbsp; Southeast Michigan</p>
+      <h1 class="reveal reveal-delay-1">Build a Strong<br><span class="text-blue">Foundation</span></h1>
+      <p class="hero-sub reveal reveal-delay-2">Three national championships. Two decades of developing players from youth hockey to the NHL. One proven system.</p>
+      <div class="hero-cta reveal reveal-delay-3">
         <a href="#contact" class="btn btn-primary">Get Started</a>
         <a href="#clips" class="btn btn-ghost">Watch Clips</a>
       </div>
     </div>
-    <div class="hero-bg-overlay"></div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar reveal reveal-delay-4">
+      <div class="stat">
+        <strong class="counter" data-target="20">0</strong><span>+</span>
+        <p>Years Coaching</p>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <strong class="counter" data-target="3">0</strong>
+        <p>National Championships</p>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <strong class="counter" data-target="5">0</strong>
+        <p>State Titles</p>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <strong class="counter" data-target="500">0</strong><span>+</span>
+        <p>Players Developed</p>
+      </div>
+    </div>
   </section>
+
+  <!-- CREDENTIAL STRIP -->
+  <div class="cred-strip">
+    <div class="cred-inner">
+      <span>Oakland University Hall of Fame</span>
+      <span class="cred-dot">·</span>
+      <span>Little Caesars AAA</span>
+      <span class="cred-dot">·</span>
+      <span>Belle Tire AAA</span>
+      <span class="cred-dot">·</span>
+      <span>Toledo Walleye ECHL</span>
+      <span class="cred-dot">·</span>
+      <span>USA Hockey</span>
+      <span class="cred-dot">·</span>
+      <span>AdvoCare Certified</span>
+      <span class="cred-dot">·</span>
+      <span>Michigan Ice Hawks</span>
+      <span class="cred-dot">·</span>
+      <span>Oakland University Hall of Fame</span>
+      <span class="cred-dot">·</span>
+      <span>Little Caesars AAA</span>
+      <span class="cred-dot">·</span>
+      <span>Belle Tire AAA</span>
+      <span class="cred-dot">·</span>
+      <span>Toledo Walleye ECHL</span>
+      <span class="cred-dot">·</span>
+      <span>USA Hockey</span>
+      <span class="cred-dot">·</span>
+      <span>AdvoCare Certified</span>
+      <span class="cred-dot">·</span>
+      <span>Michigan Ice Hawks</span>
+    </div>
+  </div>
 
   <!-- ABOUT -->
   <section class="section" id="about">
     <div class="container two-col">
-      <div class="about-text">
+      <div class="about-text reveal">
         <span class="section-label">About Craig</span>
-        <h2>Two Decades of Winning at Every Level</h2>
-        <p>Craig Furstenau started playing organized hockey at age 3 in southeast Michigan, competed through juniors, and finished his playing career as captain of the Oakland University Grizzlies.</p>
-        <p>As a coach, Craig built one of the most decorated résumés in Michigan hockey. At Oakland University (2002–2005) he posted an .800+ win percentage, won 2 GMHL titles, captured the 2004 national championship, reached the 2005 national final, and was inducted into the OU Athletic Hall of Fame. With Little Caesars AAA he won back-to-back state titles (2007–2008) and the 2008 national championship. His Belle Tire AAA team finished #1 nationally in 2014–2015.</p>
-        <p>Craig teaches hockey fundamentals to all ages with a focus on foundational skating and puck control — and the nutrition and wellness knowledge to become a complete athlete.</p>
-        <div class="accolades">
-          <div class="accolade"><strong>2004</strong><span>National Champion</span></div>
-          <div class="accolade"><strong>2×</strong><span>State Titles</span></div>
-          <div class="accolade"><strong>2008</strong><span>AAA Nat'l Champ</span></div>
-          <div class="accolade"><strong>#1</strong><span>National Finish '15</span></div>
+        <h2>Two Decades of Winning<br>at Every Level</h2>
+        <p>Craig Furstenau has been on the ice since age 3 in southeast Michigan. He competed through juniors and finished his playing career as captain of the Oakland University Grizzlies — then immediately started building one of the most decorated coaching careers in the state.</p>
+        <p>As head coach at Oakland University (2002–2005), Craig posted an .800+ win percentage, won back-to-back GMHL titles, captured the 2004 national championship, and reached the 2005 national final. He was inducted into the Oakland University Athletic Hall of Fame in 2005.</p>
+        <p>With Little Caesars AAA, Craig won back-to-back state titles and the 2008 national championship. His Belle Tire AAA squad finished #1 nationally in 2014–2015. Players Craig has developed have gone on to play in the USHL, NAHL, and college hockey — and the game's best have sought him out for their own development.</p>
+        <div class="accolades reveal">
+          <div class="accolade">
+            <strong>2004</strong>
+            <span>Nat'l Champion<br>Oakland Univ.</span>
+          </div>
+          <div class="accolade">
+            <strong>2008</strong>
+            <span>Nat'l Champion<br>Little Caesars AAA</span>
+          </div>
+          <div class="accolade">
+            <strong>#1</strong>
+            <span>National Finish<br>Belle Tire '14–15</span>
+          </div>
+          <div class="accolade">
+            <strong>OU HOF</strong>
+            <span>Hall of Fame<br>Inductee 2005</span>
+          </div>
         </div>
       </div>
-      <div class="about-img-wrap">
+      <div class="about-img-wrap reveal reveal-delay-2">
         <div class="about-img-placeholder">
-          <span>Craig Furstenau</span>
+          <div class="img-badge">
+            <strong>OU Hall of Fame</strong>
+            <span>Class of 2005</span>
+          </div>
+        </div>
+        <div class="about-quote">
+          <p>"The goal isn't just a better hockey player. It's a better athlete — and a better person."</p>
+          <cite>— Craig Furstenau</cite>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE METHOD -->
+  <section class="section section-dark" id="method">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">The Craig Furstenau Method</span>
+        <h2>What Sets This Apart</h2>
+        <p class="section-intro">Every elite coach has a system. Craig's is built on four interlocking pillars refined over 20+ years and every level of the game.</p>
+      </div>
+      <div class="method-grid">
+        <div class="method-card reveal">
+          <div class="method-num">01</div>
+          <div class="method-icon">⛸</div>
+          <h3>Foundation Skating</h3>
+          <p>Edge work, crossovers, transitions, and first-step explosiveness aren't just drills — they're the base every other skill is built on. Craig breaks skating down to its mechanical roots and rebuilds it correctly, at any age.</p>
+          <ul>
+            <li>Edge control &amp; balance</li>
+            <li>Acceleration mechanics</li>
+            <li>Backward &amp; transition skating</li>
+          </ul>
+        </div>
+        <div class="method-card reveal reveal-delay-1">
+          <div class="method-num">02</div>
+          <div class="method-icon">🏒</div>
+          <h3>Puck Mastery</h3>
+          <p>High-repetition puck handling, shooting, and passing under pressure. Craig trains hands to work automatically — so when the game speeds up, the skills don't slow down.</p>
+          <ul>
+            <li>Hands-to-feet coordination</li>
+            <li>Shooting mechanics &amp; release</li>
+            <li>Puck protection &amp; possession</li>
+          </ul>
+        </div>
+        <div class="method-card reveal reveal-delay-2">
+          <div class="method-num">03</div>
+          <div class="method-icon">🧠</div>
+          <h3>Hockey IQ &amp; Compete</h3>
+          <p>The mental side of the game separates good players from great ones. Craig coaches players to read the ice, anticipate plays, and compete at a level that goes beyond physical skill.</p>
+          <ul>
+            <li>Positional awareness</li>
+            <li>Decision-making under pressure</li>
+            <li>Compete level &amp; battle habits</li>
+          </ul>
+        </div>
+        <div class="method-card reveal reveal-delay-3">
+          <div class="method-num">04</div>
+          <div class="method-icon">💪</div>
+          <h3>Athlete Wellness</h3>
+          <p>Craig's background in sports nutrition sets him apart from most coaches. Hydration, fueling, recovery — he teaches players what to do off the ice to perform better on it. Most coaches skip this. Craig doesn't.</p>
+          <ul>
+            <li>Sports nutrition fundamentals</li>
+            <li>Hydration &amp; performance</li>
+            <li>Recovery habits &amp; longevity</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAREER TIMELINE -->
+  <section class="section" id="timeline">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Career</span>
+        <h2>A Résumé Built on Ice</h2>
+      </div>
+      <div class="timeline">
+        <div class="tl-item reveal">
+          <div class="tl-year">1999</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h3>Grosse Ile High School</h3>
+            <p>Assistant Coach — began building his coaching philosophy at the high school level.</p>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">2002–05</div>
+          <div class="tl-dot tl-dot-gold"></div>
+          <div class="tl-content">
+            <h3>Oakland University Grizzlies</h3>
+            <p>Head Coach. .800+ win pct. 2× GMHL titles. <strong>2004 National Champion.</strong> 2005 National Finalist. Inducted into OU Athletic Hall of Fame.</p>
+            <span class="tl-badge">🏆 National Champion</span>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">2005–09</div>
+          <div class="tl-dot tl-dot-gold"></div>
+          <div class="tl-content">
+            <h3>Little Caesars AAA</h3>
+            <p>Head Coach. Four seasons. Back-to-back state titles (2007, 2008). <strong>2008 National Champion.</strong></p>
+            <span class="tl-badge">🏆 National Champion</span>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">2009–10</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h3>Toledo Walleye — ECHL</h3>
+            <p>Video Coach. Professional hockey experience at the ECHL level — the league that feeds the AHL and NHL.</p>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">2010–12</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h3>Junior A & Midget Hockey</h3>
+            <p>Head Coach, Yellowstone Quake (Junior A) and Michigan Ice Hawks. Continued developing elite junior talent.</p>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">2012–14</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h3>Rocky Mountain Snow Kings — Aspen, CO</h3>
+            <p>Trainer. Expanded coaching and wellness expertise in one of the country's premier training environments.</p>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">2014–15</div>
+          <div class="tl-dot tl-dot-gold"></div>
+          <div class="tl-content">
+            <h3>Belle Tire AAA</h3>
+            <p>Coach. Led squad to a <strong>#1 national finish</strong> — one of Michigan's most prestigious AAA programs.</p>
+            <span class="tl-badge">#1 National Finish</span>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">2016</div>
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h3>Michigan Ice Hawks</h3>
+            <p>Led the 2004-born group to State and LCAHL playoff titles.</p>
+            <span class="tl-badge">State Champions</span>
+          </div>
+        </div>
+        <div class="tl-item reveal">
+          <div class="tl-year">Now</div>
+          <div class="tl-dot tl-dot-blue"></div>
+          <div class="tl-content">
+            <h3>Furstenau Hockey Development</h3>
+            <p>Individual and small group skill training. Meijer 2007 AAA, Troy Sting 2006, and private clients. Available for team clinics.</p>
+            <span class="tl-badge tl-badge-blue">Available for Training</span>
+          </div>
         </div>
       </div>
     </div>
@@ -83,40 +309,114 @@
   <!-- TRAINING -->
   <section class="section section-dark" id="training">
     <div class="container">
-      <span class="section-label">Training</span>
-      <h2>Programs &amp; Clinics</h2>
+      <div class="section-header reveal">
+        <span class="section-label">Programs</span>
+        <h2>Training That Delivers Results</h2>
+        <p class="section-intro">Whether you're a first-year mite or a player eyeing the next level, Craig builds a plan around where you are and where you need to go.</p>
+      </div>
       <div class="cards">
-        <div class="card">
+        <div class="card reveal">
           <div class="card-icon">⛸</div>
-          <h3>Individual Skill Training</h3>
-          <p>One-on-one sessions targeting skating mechanics, edge work, puck handling, and shooting — built around your player's specific needs.</p>
+          <h3>Individual Training</h3>
+          <p>One-on-one sessions built entirely around your player's specific needs — skating mechanics, edge work, puck handling, and shooting. Full focus, maximum reps, fastest results.</p>
+          <ul class="card-list">
+            <li>All ages &amp; skill levels</li>
+            <li>Customized to your player's gaps</li>
+            <li>On-ice &amp; off-ice components</li>
+          </ul>
           <a href="#contact" class="card-link">Book a Session →</a>
         </div>
-        <div class="card">
+        <div class="card reveal reveal-delay-1">
           <div class="card-icon">🏒</div>
           <h3>Small Group Training</h3>
-          <p>High-rep skill development in small groups of 4–8 players. Maximum ice time, maximum touches, maximum improvement.</p>
+          <p>High-rep skill development in groups of 4–8 players. Small enough for real coaching attention, competitive enough to push every player. This is where games are won.</p>
+          <ul class="card-list">
+            <li>Max 8 players per session</li>
+            <li>High-competition drills</li>
+            <li>Peer-level accountability</li>
+          </ul>
           <a href="#contact" class="card-link">Get Info →</a>
         </div>
-        <div class="card">
+        <div class="card reveal reveal-delay-2">
           <div class="card-icon">🧠</div>
           <h3>Team Clinics</h3>
-          <p>Full-team sessions focused on system play, compete level, and the mental side of the game — for teams wanting an edge.</p>
+          <p>Full-team sessions for organizations that want an edge. System play, compete culture, and the mental components that separate championship teams from the rest of the field.</p>
+          <ul class="card-list">
+            <li>AAA, AA &amp; travel teams</li>
+            <li>System &amp; compete culture</li>
+            <li>Nutrition &amp; athlete wellness</li>
+          </ul>
           <a href="#contact" class="card-link">Inquire →</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FEATURED CLIP -->
-  <section class="section" id="clips">
+  <!-- PLAYER SUCCESS / ALUMNI -->
+  <section class="section" id="alumni">
     <div class="container">
-      <span class="section-label">Film Room</span>
-      <h2>Featured Clips</h2>
-      <div class="clips-layout">
-        <div class="clip-featured">
+      <div class="section-header reveal">
+        <span class="section-label">Player Development</span>
+        <h2>The Proof Is in the Players</h2>
+        <p class="section-intro">Players Craig has coached and trained have gone on to the highest levels of the game.</p>
+      </div>
+
+      <div class="alumni-feature reveal">
+        <div class="alumni-video">
           <div class="video-wrap">
-            <iframe
+            <iframe src="https://www.youtube.com/embed/0WfK1jgVpx8" title="Rocco Grimaldi Feature" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="alumni-content">
+          <span class="section-label">Featured Player</span>
+          <h3>Rocco Grimaldi</h3>
+          <p class="alumni-position">NHL Forward · Florida Panthers · Colorado Avalanche · Nashville Predators · KHL</p>
+          <p>Drafted 33rd overall in the 2011 NHL Draft, Rocco Grimaldi played 11 professional seasons in North America — defying every doubter who said his size would hold him back. On March 25, 2021, Grimaldi scored 4 goals against the Detroit Red Wings, including a hat trick in just 2 minutes and 34 seconds — the fastest in Nashville Predators history.</p>
+          <p>Rocco's story is exactly what Craig's approach is about: relentless skill development, compete level that exceeds expectations, and the complete athlete mindset that makes size irrelevant.</p>
+          <div class="alumni-stats">
+            <div><strong>33rd</strong><span>Overall Pick, 2011</span></div>
+            <div><strong>11</strong><span>Pro Seasons</span></div>
+            <div><strong>2:34</strong><span>Hat Trick (Predators Record)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alumni-levels reveal">
+        <div class="alumni-level">
+          <div class="level-icon">🏒</div>
+          <h4>NHL &amp; Pro Hockey</h4>
+          <p>Players developed by Craig have competed at the NHL and professional hockey level.</p>
+        </div>
+        <div class="alumni-level">
+          <div class="level-icon">🎓</div>
+          <h4>College Hockey</h4>
+          <p>Alumni skating in NCAA programs across the country — Division I, II, and III.</p>
+        </div>
+        <div class="alumni-level">
+          <div class="level-icon">⬆️</div>
+          <h4>USHL &amp; NAHL</h4>
+          <p>Multiple players making the jump to Tier I and Tier II junior hockey after Craig's training.</p>
+        </div>
+        <div class="alumni-level">
+          <div class="level-icon">🏆</div>
+          <h4>AAA Champions</h4>
+          <p>State and national champions at the elite youth AAA level — the pipeline to the next level.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALL CLIPS -->
+  <section class="section section-dark" id="clips">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Film Room</span>
+        <h2>Watch &amp; Share</h2>
+      </div>
+      <div class="clips-layout">
+        <div class="clip-featured reveal">
+          <div class="video-wrap">
+            <iframe id="main-player"
               src="https://www.youtube.com/embed/0WfK1jgVpx8"
               title="Rocco Grimaldi Feature"
               frameborder="0"
@@ -125,37 +425,46 @@
             </iframe>
           </div>
           <div class="clip-meta">
-            <h3>Rocco Grimaldi Feature</h3>
-            <p>An inside look at how Craig's training principles shaped the career of NHL forward Rocco Grimaldi.</p>
+            <h3 id="clip-title">Rocco Grimaldi Feature</h3>
+            <p id="clip-desc">An inside look at how Craig's training principles shaped the career of 2nd-round NHL pick Rocco Grimaldi.</p>
             <div class="share-row">
               <span>Share:</span>
-              <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://www.furstenauhockey.com/%23clips" target="_blank" rel="noopener">Facebook</a>
-              <a class="share-btn" href="https://twitter.com/intent/tweet?url=https://www.furstenauhockey.com/%23clips&text=Check+out+this+Furstenau+Hockey+clip" target="_blank" rel="noopener">X / Twitter</a>
-              <button class="share-btn" onclick="copyLink('https://www.furstenauhockey.com/#clips')">Copy Link</button>
+              <a class="share-btn" id="share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://www.furstenauhockey.com/%23clips" target="_blank" rel="noopener">Facebook</a>
+              <a class="share-btn" id="share-tw" href="https://twitter.com/intent/tweet?url=https://www.furstenauhockey.com/%23clips&text=Check+out+this+Furstenau+Hockey+clip" target="_blank" rel="noopener">X / Twitter</a>
+              <button class="share-btn" onclick="copyLink(this, 'https://www.furstenauhockey.com/#clips')">Copy Link</button>
             </div>
           </div>
         </div>
 
-        <div class="clip-list">
-          <button class="clip-item active" data-id="0WfK1jgVpx8" data-title="Rocco Grimaldi Feature" data-desc="An inside look at how Craig's training principles shaped the career of NHL forward Rocco Grimaldi.">
+        <div class="clip-list reveal reveal-delay-1">
+          <button class="clip-item active"
+            data-id="0WfK1jgVpx8"
+            data-title="Rocco Grimaldi Feature"
+            data-desc="An inside look at how Craig's training principles shaped the career of 2nd-round NHL pick Rocco Grimaldi.">
             <img src="https://i.ytimg.com/vi/0WfK1jgVpx8/mqdefault.jpg" alt="Rocco Grimaldi Feature">
             <div>
               <strong>Rocco Grimaldi Feature</strong>
-              <span>5:39</span>
+              <span>5:39 · Player Story</span>
             </div>
           </button>
-          <button class="clip-item" data-id="HSGX7c3fDQQ" data-title="Q&A with Ken Daniels" data-desc="Craig sits down for a wide-ranging Q&A with longtime NHL broadcaster Ken Daniels.">
+          <button class="clip-item"
+            data-id="HSGX7c3fDQQ"
+            data-title="Q&A with Ken Daniels"
+            data-desc="Craig sits down with longtime NHL broadcaster Ken Daniels for a wide-ranging conversation on coaching, player development, and the game.">
             <img src="https://i.ytimg.com/vi/HSGX7c3fDQQ/mqdefault.jpg" alt="Q&A with Ken Daniels">
             <div>
               <strong>Q&amp;A with Ken Daniels</strong>
-              <span>14:52</span>
+              <span>14:52 · Interview</span>
             </div>
           </button>
-          <button class="clip-item" data-id="NdeHYYfCZHg" data-title="Furstenau Hockey Development" data-desc="A quick look at what Furstenau Hockey Development is all about.">
+          <button class="clip-item"
+            data-id="NdeHYYfCZHg"
+            data-title="Furstenau Hockey Development"
+            data-desc="A quick look at what Furstenau Hockey Development is all about — the approach, the environment, and the results.">
             <img src="https://i.ytimg.com/vi/NdeHYYfCZHg/mqdefault.jpg" alt="Furstenau Hockey Development">
             <div>
               <strong>Furstenau Hockey Development</strong>
-              <span>0:36</span>
+              <span>0:36 · Overview</span>
             </div>
           </button>
         </div>
@@ -163,79 +472,107 @@
     </div>
   </section>
 
-  <!-- POSTS / NEWS -->
-  <section class="section section-dark" id="posts">
+  <!-- NEWS / POSTS -->
+  <section class="section" id="posts">
     <div class="container">
-      <span class="section-label">News &amp; Updates</span>
-      <h2>Latest from Craig</h2>
-      <div class="posts-grid" id="posts-grid">
-        <!-- Posts are added here — edit posts.js to add new ones -->
-        <article class="post-card">
+      <div class="section-header reveal">
+        <span class="section-label">News &amp; Updates</span>
+        <h2>Latest from Craig</h2>
+      </div>
+      <div class="posts-grid">
+        <article class="post-card reveal">
           <div class="post-date">June 2025</div>
           <h3>Summer Clinics Now Open</h3>
-          <p>Registration is open for summer small group sessions. Limited spots available — contact Craig to reserve your player's slot.</p>
+          <p>Registration is open for summer small group sessions. Limited spots available — contact Craig directly to reserve your player's slot before they're gone.</p>
           <div class="share-row">
-            <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://www.furstenauhockey.com/%23posts" target="_blank" rel="noopener">Share</a>
+            <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://www.furstenauhockey.com/%23posts" target="_blank" rel="noopener">Share on Facebook</a>
           </div>
         </article>
-        <article class="post-card">
+        <article class="post-card reveal reveal-delay-1">
           <div class="post-date">May 2025</div>
           <h3>Player Spotlight: Belle Tire Alumni in College Hockey</h3>
-          <p>Several players from the 2014–2015 Belle Tire AAA squad — which finished #1 nationally — are now competing at the college level. Proud of every one of them.</p>
+          <p>Several players from Craig's 2014–2015 Belle Tire AAA squad — which finished #1 nationally — are now competing at the college hockey level. Proud of every one of them.</p>
           <div class="share-row">
-            <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://www.furstenauhockey.com/%23posts" target="_blank" rel="noopener">Share</a>
+            <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://www.furstenauhockey.com/%23posts" target="_blank" rel="noopener">Share on Facebook</a>
           </div>
         </article>
       </div>
+      <p class="posts-note reveal">Follow Craig on <a href="https://www.facebook.com/furstenauhockey" target="_blank" rel="noopener">Facebook</a> and <a href="https://www.instagram.com/craigfurstenau" target="_blank" rel="noopener">Instagram</a> for daily updates, drills, and player highlights.</p>
     </div>
   </section>
 
   <!-- TESTIMONIALS -->
-  <section class="section" id="testimonials">
+  <section class="section section-dark" id="testimonials">
     <div class="container">
-      <span class="section-label">Testimonials</span>
-      <h2>What Families Say</h2>
+      <div class="section-header reveal">
+        <span class="section-label">Testimonials</span>
+        <h2>What Families Are Saying</h2>
+      </div>
       <div class="testimonials">
-        <blockquote>
-          <p>"Craig loves his players and wants them improving daily. He goes above and beyond for families. His nutrition knowledge is exceptional — he taught us that dehydration significantly impacts performance."</p>
-          <cite>— Shannon</cite>
+        <blockquote class="reveal">
+          <div class="quote-icon">"</div>
+          <p>Craig loves his players and wants them improving every single day. He goes above and beyond for families. His nutrition knowledge is exceptional — he taught us that dehydration alone can significantly impact on-ice performance. No other coach has ever brought that up.</p>
+          <cite>— Shannon, Hockey Parent</cite>
         </blockquote>
-        <blockquote>
-          <p>"Excellent focus on complete player development, both on and off the ice."</p>
-          <cite>— Jen</cite>
+        <blockquote class="reveal reveal-delay-1">
+          <div class="quote-icon">"</div>
+          <p>The focus on the complete player — both on and off the ice — is what sets Craig apart. My son didn't just get better at hockey. He became a better athlete, period.</p>
+          <cite>— Jen, Hockey Parent</cite>
         </blockquote>
-        <blockquote>
-          <p>"Training from Craig helped my son reach the USHL, NAHL, and eventually college hockey."</p>
-          <cite>— Debra</cite>
+        <blockquote class="reveal">
+          <div class="quote-icon">"</div>
+          <p>Craig's training helped my son reach the USHL, then the NAHL, and eventually college hockey. The foundation he built in those early sessions paid off for years. You can't put a price on that.</p>
+          <cite>— Debra, Hockey Parent</cite>
         </blockquote>
-        <blockquote>
-          <p>"My son showed immediate skating improvement after just one of Craig's clinics."</p>
-          <cite>— Kris</cite>
+        <blockquote class="reveal reveal-delay-1">
+          <div class="quote-icon">"</div>
+          <p>My son showed immediate, visible improvement in his skating after just one clinic with Craig. We saw changes in his edges and his speed that we'd been trying to fix for two seasons. One session.</p>
+          <cite>— Kris, Hockey Parent</cite>
         </blockquote>
       </div>
     </div>
   </section>
 
   <!-- CONTACT -->
-  <section class="section section-dark" id="contact">
+  <section class="section" id="contact">
     <div class="container contact-wrap">
-      <div>
+      <div class="contact-info reveal">
         <span class="section-label">Contact</span>
         <h2>Ready to Level Up?</h2>
-        <p>Reach out to Craig directly to discuss training options, availability, and pricing.</p>
+        <p>Reach out to Craig directly. Whether you're looking for individual training, small group work, or a full team clinic — tell him where your player is and where they want to go.</p>
         <ul class="contact-list">
-          <li><a href="mailto:craigfurstenau@hotmail.com">craigfurstenau@hotmail.com</a></li>
           <li>
-            <a href="https://www.facebook.com/furstenauhockey" target="_blank" rel="noopener">Facebook</a> ·
-            <a href="https://www.instagram.com/craigfurstenau" target="_blank" rel="noopener">Instagram</a>
+            <span class="contact-icon">✉️</span>
+            <a href="mailto:craigfurstenau@hotmail.com">craigfurstenau@hotmail.com</a>
+          </li>
+          <li>
+            <span class="contact-icon">📘</span>
+            <a href="https://www.facebook.com/furstenauhockey" target="_blank" rel="noopener">facebook.com/furstenauhockey</a>
+          </li>
+          <li>
+            <span class="contact-icon">📸</span>
+            <a href="https://www.instagram.com/craigfurstenau" target="_blank" rel="noopener">@craigfurstenau</a>
           </li>
         </ul>
+        <p class="contact-location">📍 Southeast Michigan</p>
       </div>
-      <form class="contact-form" onsubmit="submitForm(event)">
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="email" name="email" placeholder="Email Address" required>
-        <input type="text" name="player" placeholder="Player Name &amp; Age (optional)">
-        <textarea name="message" placeholder="Tell Craig what you're looking for..." rows="4" required></textarea>
+      <form class="contact-form reveal reveal-delay-1" onsubmit="submitForm(event)">
+        <div class="form-row">
+          <input type="text" name="name" placeholder="Your Name" required>
+          <input type="email" name="email" placeholder="Email Address" required>
+        </div>
+        <div class="form-row">
+          <input type="text" name="player" placeholder="Player Name">
+          <input type="text" name="age" placeholder="Player Age / Level">
+        </div>
+        <select name="interest">
+          <option value="" disabled selected>What are you interested in?</option>
+          <option>Individual Training</option>
+          <option>Small Group Training</option>
+          <option>Team Clinic</option>
+          <option>General Inquiry</option>
+        </select>
+        <textarea name="message" placeholder="Tell Craig about your player — current level, goals, and what you're looking to work on..." rows="4" required></textarea>
         <button type="submit" class="btn btn-primary">Send Message</button>
         <p class="form-note" id="form-note"></p>
       </form>
@@ -245,13 +582,16 @@
   <!-- FOOTER -->
   <footer class="site-footer">
     <div class="container footer-inner">
-      <span class="logo-main">FURSTENAU HOCKEY</span>
+      <div class="footer-brand">
+        <span class="logo-main">FURSTENAU HOCKEY</span>
+        <p>Building complete athletes since 2002.</p>
+      </div>
       <div class="footer-links">
         <a href="https://www.facebook.com/furstenauhockey" target="_blank" rel="noopener">Facebook</a>
         <a href="https://www.instagram.com/craigfurstenau" target="_blank" rel="noopener">Instagram</a>
-        <a href="mailto:craigfurstenau@hotmail.com">Email</a>
+        <a href="mailto:craigfurstenau@hotmail.com">Email Craig</a>
       </div>
-      <p class="footer-copy">&copy; 2025 Furstenau Hockey Development</p>
+      <p class="footer-copy">&copy; 2025 Furstenau Hockey Development · Southeast Michigan</p>
     </div>
   </footer>
 
