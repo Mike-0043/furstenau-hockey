@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "furstenau-hockey",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-p", "3000", "/Users/michael/Furstenau Hockey"],
+      "port": 3000
+    }
+  ]
+}
