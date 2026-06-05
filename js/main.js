@@ -155,7 +155,7 @@ function fmt12(time24) {
   return `${hour}:${String(m).padStart(2,'0')} ${ampm}`;
 }
 
-// ── Events / Schedule ──
+// ── Sessions ──
 async function loadEvents() {
   const container = document.getElementById('events-container');
   if (!container) return;
@@ -167,7 +167,7 @@ async function loadEvents() {
     if (!events.length) {
       container.innerHTML = `
         <div style="text-align:center;padding:48px 0;color:var(--text-dim)">
-          <p style="font-size:16px">No events scheduled yet.</p>
+          <p style="font-size:16px">No sessions scheduled yet.</p>
           <p style="font-size:13px;margin-top:8px">Check back soon or <a href="#contact" style="color:var(--blue-light)">contact Craig</a> for availability.</p>
         </div>`;
       return;
@@ -179,7 +179,7 @@ async function loadEvents() {
   } catch {
     container.innerHTML = `
       <div style="text-align:center;padding:48px 0;color:var(--text-dim)">
-        <p>Could not load schedule. <a href="#contact" style="color:var(--blue-light)">Contact Craig directly.</a></p>
+        <p>Could not load sessions. <a href="#contact" style="color:var(--blue-light)">Contact Craig directly.</a></p>
       </div>`;
   }
 }
@@ -283,7 +283,7 @@ let _cart = {}; // { eventId: eventObject }
 let _waiverAccepted = false;
 let _pendingCartEvent = null;
 
-// ── Cart toggle from schedule section ──
+// ── Cart toggle from sessions ──
 function toggleCart(ev) {
   // If removing — no waiver needed
   if (_cart[ev.id]) {
