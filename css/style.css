@@ -1274,3 +1274,260 @@ cite {
   .tl-year { left: -60px; width: 50px; font-size: 9px; }
   .timeline::before { left: 40px; }
 }
+
+/* ── Events / Schedule ── */
+.events-loading {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--text-dim);
+  font-size: 15px;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.event-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.event-card:hover { border-color: rgba(58,143,216,0.35); transform: translateY(-3px); }
+
+.event-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.event-type-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(58,143,216,0.15);
+  border: 1px solid rgba(58,143,216,0.25);
+  color: var(--blue-light);
+}
+
+.event-sold-out {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(192,57,43,0.15);
+  border: 1px solid rgba(192,57,43,0.3);
+  color: #e74c3c;
+}
+
+.event-urgent {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: rgba(232,160,32,0.15);
+  border: 1px solid rgba(232,160,32,0.3);
+  color: var(--gold);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.event-card-title {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.event-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.event-card-meta span::before {
+  content: '· ';
+  color: var(--blue);
+}
+
+.event-card-meta span:first-child::before { content: ''; }
+
+.event-card-desc {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.event-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  gap: 16px;
+}
+
+.event-price {
+  font-family: var(--font-head);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.event-spots { flex: 1; }
+
+.spots-track {
+  height: 5px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.spots-fill-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.spots-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ── Booking Modal ── */
+.booking-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.booking-overlay.open { display: flex; }
+
+.booking-modal {
+  background: var(--dark2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px;
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.booking-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.booking-close:hover { background: rgba(255,255,255,0.14); color: var(--white); }
+
+.booking-event-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(26,111,190,0.1);
+  border: 1px solid rgba(58,143,216,0.25);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.booking-event-summary strong {
+  font-family: var(--font-head);
+  font-size: 16px;
+  color: var(--white);
+}
+
+.booking-event-summary span {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.booking-modal h3 {
+  font-family: var(--font-head);
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+
+.booking-modal label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.booking-modal .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.booking-price-row { margin-bottom: 16px; }
+
+.booking-price {
+  font-size: 20px;
+  color: var(--text);
+}
+
+.booking-price strong {
+  font-family: var(--font-head);
+  font-size: 28px;
+  color: var(--white);
+}
+
+.booking-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .events-grid { grid-template-columns: 1fr; }
+  .booking-modal .form-row { grid-template-columns: 1fr; }
+  .event-card-footer { flex-direction: column; align-items: flex-start; }
+}

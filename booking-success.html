@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Confirmed — Furstenau Hockey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0d1014;color:#c8d0d8;font-family:'Inter',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .box{text-align:center;max-width:520px;width:100%}
+    .check{width:72px;height:72px;background:rgba(39,174,96,0.15);border:2px solid rgba(39,174,96,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;font-size:32px}
+    img{height:56px;filter:brightness(0) invert(1);opacity:.85;margin-bottom:32px}
+    h1{font-family:'Oswald',sans-serif;font-size:32px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:12px}
+    p{font-size:15px;color:rgba(255,255,255,0.65);line-height:1.6;margin-bottom:8px}
+    .detail{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:20px 24px;margin:24px 0;text-align:left}
+    .detail p{font-size:13px;margin-bottom:6px}
+    .detail strong{color:#fff}
+    .actions{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+    a.btn{display:inline-block;font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:8px;text-decoration:none;transition:background .2s}
+    .btn-primary{background:#1a6fbe;color:#fff}
+    .btn-primary:hover{background:#3a8fd8}
+    .btn-ghost{background:rgba(255,255,255,0.07);color:#fff;border:1px solid rgba(255,255,255,0.15)}
+    .btn-ghost:hover{background:rgba(255,255,255,0.12)}
+  </style>
+</head>
+<body>
+<div class="box">
+  <img src="images/logo.png" alt="Furstenau Hockey Development">
+  <div class="check">✓</div>
+  <h1>You're Booked!</h1>
+  <p>Your spot has been confirmed.</p>
+  <p>Craig will follow up with any details closer to the date.</p>
+
+  <div class="detail" id="booking-detail" style="display:none">
+    <p><strong>Event:</strong> <span id="conf-event">—</span></p>
+    <p><strong>Player:</strong> <span id="conf-name">—</span></p>
+    <p>A confirmation email has been sent to your inbox.</p>
+  </div>
+
+  <div class="detail" id="booking-detail-generic">
+    <p>A confirmation email has been sent to your inbox.</p>
+    <p>Questions? Email Craig at <strong><a href="mailto:craigfurstenau@hotmail.com" style="color:#3a8fd8">craigfurstenau@hotmail.com</a></strong></p>
+  </div>
+
+  <div class="actions">
+    <a href="/" class="btn btn-primary">Back to Site</a>
+    <a href="https://www.facebook.com/furstenauhockey" target="_blank" class="btn btn-ghost">Follow on Facebook</a>
+  </div>
+</div>
+<script>
+  const params = new URLSearchParams(location.search);
+  if (params.get('mock') || params.get('event')) {
+    document.getElementById('booking-detail').style.display = 'block';
+    document.getElementById('booking-detail-generic').style.display = 'none';
+    document.getElementById('conf-event').textContent = decodeURIComponent(params.get('event') || '');
+    document.getElementById('conf-name').textContent = decodeURIComponent(params.get('name') || '');
+  }
+</script>
+</body>
+</html>

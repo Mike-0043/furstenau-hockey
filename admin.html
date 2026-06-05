@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FHD Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --black:#080a0c;--dark:#0d1014;--dark2:#13181e;--dark3:#1a2028;
+      --blue:#1a6fbe;--blue-light:#3a8fd8;--gold:#e8a020;
+      --white:#fff;--text:#c8d0d8;--text-dim:#7a8590;--border:rgba(255,255,255,0.07);
+      --red:#c0392b;--green:#27ae60;
+      --font-head:'Oswald',sans-serif;--font-body:'Inter',sans-serif;
+    }
+    body{background:var(--dark);color:var(--text);font-family:var(--font-body);font-size:14px;min-height:100vh}
+    a{color:var(--blue-light);text-decoration:none}
+    input,select,textarea{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:6px;padding:10px 14px;color:var(--white);font-family:var(--font-body);font-size:14px;width:100%;transition:border-color .2s}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
+    input::placeholder,textarea::placeholder{color:var(--text-dim)}
+    select option{background:var(--dark2)}
+    button{font-family:var(--font-body);cursor:pointer;border:none;transition:background .2s,transform .15s}
+    button:hover{transform:translateY(-1px)}
+    .btn{padding:10px 20px;border-radius:6px;font-weight:600;font-size:13px;letter-spacing:.04em}
+    .btn-primary{background:var(--blue);color:#fff}
+    .btn-primary:hover{background:var(--blue-light)}
+    .btn-danger{background:rgba(192,57,43,0.15);color:#e74c3c;border:1px solid rgba(192,57,43,0.3)}
+    .btn-danger:hover{background:rgba(192,57,43,0.3)}
+    .btn-ghost{background:rgba(255,255,255,0.06);color:var(--text);border:1px solid var(--border)}
+    .btn-ghost:hover{background:rgba(255,255,255,0.12)}
+    .btn-sm{padding:6px 12px;font-size:12px}
+
+    /* Login */
+    #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh}
+    .login-box{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:48px 40px;width:100%;max-width:380px;text-align:center}
+    .login-box img{height:64px;filter:brightness(0) invert(1);opacity:.9;margin-bottom:24px}
+    .login-box h1{font-family:var(--font-head);font-size:22px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:6px}
+    .login-box p{font-size:12px;color:var(--text-dim);margin-bottom:28px;letter-spacing:.06em;text-transform:uppercase}
+    .login-box input{margin-bottom:14px;text-align:center}
+    .login-error{color:#e74c3c;font-size:12px;margin-top:10px;min-height:18px}
+
+    /* App shell */
+    #app{display:none}
+    .app-header{background:var(--dark2);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between}
+    .app-header img{height:44px;filter:brightness(0) invert(1);opacity:.9}
+    .app-header span{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+    .app-body{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 60px)}
+    .sidebar{background:var(--dark2);border-right:1px solid var(--border);padding:24px 0}
+    .sidebar a{display:block;padding:11px 24px;font-size:13px;font-weight:500;color:var(--text-dim);transition:color .2s,background .2s}
+    .sidebar a:hover,.sidebar a.active{color:#fff;background:rgba(255,255,255,0.05)}
+    .sidebar a.active{border-left:2px solid var(--blue-light);color:var(--blue-light)}
+    .main{padding:32px;overflow-y:auto}
+
+    /* Panels */
+    .panel{display:none}
+    .panel.active{display:block}
+    .panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+    .panel-title{font-family:var(--font-head);font-size:24px;font-weight:700;text-transform:uppercase;color:#fff}
+    .panel-sub{font-size:12px;color:var(--text-dim);margin-top:4px}
+
+    /* Cards */
+    .card{background:var(--dark2);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:16px}
+    .card-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .card-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+    .field-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px}
+
+    /* Event list */
+    .event-item{background:var(--dark2);border:1px solid var(--border);border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;margin-bottom:12px;transition:border-color .2s}
+    .event-item:hover{border-color:rgba(58,143,216,0.3)}
+    .event-item h3{font-family:var(--font-head);font-size:16px;font-weight:600;color:#fff;text-transform:uppercase;margin-bottom:4px}
+    .event-item p{font-size:12px;color:var(--text-dim)}
+    .event-actions{display:flex;gap:8px;align-items:center}
+    .spots-bar{margin-top:10px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
+    .spots-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .4s}
+    .spots-fill.urgent{background:var(--gold)}
+    .spots-fill.full{background:var(--red)}
+    .badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px}
+    .badge-type{background:rgba(58,143,216,0.15);color:var(--blue-light);border:1px solid rgba(58,143,216,0.25)}
+    .badge-full{background:rgba(192,57,43,0.15);color:#e74c3c;border:1px solid rgba(192,57,43,0.25)}
+    .badge-active{background:rgba(39,174,96,0.15);color:#2ecc71;border:1px solid rgba(39,174,96,0.25)}
+
+    /* Bookings table */
+    table{width:100%;border-collapse:collapse}
+    th{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding:10px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    td{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px}
+    tr:hover td{background:rgba(255,255,255,0.02)}
+    .paid-badge{color:#2ecc71;font-weight:600}
+
+    /* Stats */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+    .stat-card{background:var(--dark2);border:1px solid var(--border);border-radius:10px;padding:20px 24px}
+    .stat-card strong{display:block;font-family:var(--font-head);font-size:28px;font-weight:700;color:#fff}
+    .stat-card span{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+
+    /* Toast */
+    .toast{position:fixed;bottom:24px;right:24px;background:var(--dark3);border:1px solid var(--border);border-radius:8px;padding:14px 20px;font-size:13px;font-weight:500;color:#fff;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;z-index:999;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.success{border-color:rgba(39,174,96,0.4);color:#2ecc71}
+    .toast.error{border-color:rgba(192,57,43,0.4);color:#e74c3c}
+
+    /* Modal */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:32px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto}
+    .modal h2{font-family:var(--font-head);font-size:20px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:24px}
+    .modal-footer{display:flex;gap:12px;justify-content:flex-end;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
+    .field{margin-bottom:16px}
+
+    @media(max-width:768px){
+      .app-body{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .stats-row{grid-template-columns:1fr 1fr}
+      .card-row,.card-row-3{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <img src="images/logo.png" alt="FHD">
+    <h1>Admin Panel</h1>
+    <p>Furstenau Hockey Development</p>
+    <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doLogin()">Sign In</button>
+    <p class="login-error" id="login-error"></p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="app-header">
+    <img src="images/logo.png" alt="FHD">
+    <div style="display:flex;align-items:center;gap:16px">
+      <span>Admin Panel</span>
+      <a href="/" style="font-size:12px;color:var(--text-dim)">← View Site</a>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Sign Out</button>
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="sidebar">
+      <a href="#" class="active" onclick="showPanel('dashboard',this)">Dashboard</a>
+      <a href="#" onclick="showPanel('events',this)">Events &amp; Schedule</a>
+      <a href="#" onclick="showPanel('bookings',this)">Bookings</a>
+      <a href="#" onclick="showPanel('new-event',this)">+ New Event</a>
+    </div>
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Dashboard</div>
+            <div class="panel-sub">Overview of all events and bookings</div>
+          </div>
+        </div>
+        <div class="stats-row" id="dash-stats">
+          <div class="stat-card"><strong id="stat-events">—</strong><span>Active Events</span></div>
+          <div class="stat-card"><strong id="stat-bookings">—</strong><span>Total Bookings</span></div>
+          <div class="stat-card"><strong id="stat-revenue">—</strong><span>Revenue (Test)</span></div>
+          <div class="stat-card"><strong id="stat-spots">—</strong><span>Spots Remaining</span></div>
+        </div>
+        <div id="dash-events-list"></div>
+      </div>
+
+      <!-- EVENTS -->
+      <div class="panel" id="panel-events">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Events &amp; Schedule</div>
+            <div class="panel-sub">Manage ice times, camps, and clinics</div>
+          </div>
+          <button class="btn btn-primary" onclick="showPanel('new-event',document.querySelector('.sidebar a:last-child'))">+ New Event</button>
+        </div>
+        <div id="events-list">Loading...</div>
+      </div>
+
+      <!-- BOOKINGS -->
+      <div class="panel" id="panel-bookings">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Bookings</div>
+            <div class="panel-sub">All registrations and payments</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="field-label">Filter by Event</div>
+          <select id="bookings-filter" onchange="loadBookings()">
+            <option value="">All Events</option>
+          </select>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <table>
+            <thead><tr>
+              <th>Player</th><th>Parent/Contact</th><th>Email</th><th>Event</th><th>Amount</th><th>Date</th>
+            </tr></thead>
+            <tbody id="bookings-table">
+              <tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:24px">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NEW EVENT -->
+      <div class="panel" id="panel-new-event">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title" id="new-event-title">New Event</div>
+            <div class="panel-sub">Add a class, camp, clinic, or ice time</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="field">
+            <div class="field-label">Event Title *</div>
+            <input type="text" id="ev-title" placeholder="e.g. Summer Skating Camp Week 1">
+          </div>
+          <div class="field">
+            <div class="field-label">Type *</div>
+            <select id="ev-type">
+              <option value="individual">Individual Training</option>
+              <option value="small-group">Small Group Training</option>
+              <option value="camp">Camp</option>
+              <option value="clinic">Clinic</option>
+              <option value="team">Team Session</option>
+              <option value="ice-time">Open Ice Time</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="field-label">Description</div>
+            <textarea id="ev-desc" rows="3" placeholder="What players can expect, skill level, what to bring..."></textarea>
+          </div>
+          <div class="card-row">
+            <div class="field">
+              <div class="field-label">Date *</div>
+              <input type="date" id="ev-date">
+            </div>
+            <div class="field">
+              <div class="field-label">Time *</div>
+              <input type="time" id="ev-time">
+            </div>
+          </div>
+          <div class="card-row">
+            <div class="field">
+              <div class="field-label">Duration</div>
+              <input type="text" id="ev-duration" placeholder="e.g. 90 minutes">
+            </div>
+            <div class="field">
+              <div class="field-label">Location</div>
+              <input type="text" id="ev-location" placeholder="e.g. Arctic Ice Arena, Troy MI">
+            </div>
+          </div>
+          <div class="card-row">
+            <div class="field">
+              <div class="field-label">Price (USD) *</div>
+              <input type="number" id="ev-price" placeholder="75" min="0">
+            </div>
+            <div class="field">
+              <div class="field-label">Capacity (max spots) *</div>
+              <input type="number" id="ev-capacity" placeholder="8" min="1">
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:8px">
+            <button class="btn btn-primary" onclick="saveEvent()">Save Event</button>
+            <button class="btn btn-ghost" onclick="resetEventForm()">Clear</button>
+          </div>
+          <p id="ev-feedback" style="margin-top:12px;font-size:13px;min-height:18px"></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- EDIT EVENT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <h2>Edit Event</h2>
+    <input type="hidden" id="edit-ev-id">
+    <div class="field"><div class="field-label">Title</div><input type="text" id="edit-ev-title"></div>
+    <div class="card-row">
+      <div class="field"><div class="field-label">Date</div><input type="date" id="edit-ev-date"></div>
+      <div class="field"><div class="field-label">Time</div><input type="time" id="edit-ev-time"></div>
+    </div>
+    <div class="card-row">
+      <div class="field"><div class="field-label">Price (USD)</div><input type="number" id="edit-ev-price"></div>
+      <div class="field"><div class="field-label">Capacity</div><input type="number" id="edit-ev-capacity"></div>
+    </div>
+    <div class="field"><div class="field-label">Location</div><input type="text" id="edit-ev-location"></div>
+    <div class="field"><div class="field-label">Description</div><textarea id="edit-ev-desc" rows="3"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="updateEvent()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let allEvents = [];
+let editingId = null;
+
+// ── Auth ──
+async function doLogin() {
+  const pw = document.getElementById('pw-input').value;
+  const err = document.getElementById('login-error');
+  err.textContent = '';
+  try {
+    const res = await fetch('/api/admin-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ password: pw }),
+    });
+    if (res.ok) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      loadAll();
+    } else {
+      err.textContent = 'Incorrect password.';
+    }
+  } catch(e) {
+    err.textContent = 'Connection error.';
+  }
+}
+
+function logout() {
+  document.cookie = 'fhd_admin=; Max-Age=0; Path=/';
+  location.reload();
+}
+
+// ── Navigation ──
+function showPanel(name, link) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (link) link.classList.add('active');
+  if (name === 'bookings') loadBookings();
+  if (name === 'events') renderEvents();
+}
+
+// ── Load data ──
+async function loadAll() {
+  try {
+    const res = await fetch('/api/events', { credentials: 'include' });
+    allEvents = await res.json();
+    renderDashboard();
+    renderEvents();
+    populateBookingsFilter();
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+// ── Dashboard ──
+function renderDashboard() {
+  const active = allEvents.filter(e => e.active);
+  const totalBookings = active.reduce((s, e) => s + e.spotsBooked, 0);
+  const revenue = active.reduce((s, e) => s + (e.spotsBooked * e.price), 0);
+  const spotsLeft = active.reduce((s, e) => s + Math.max(0, e.capacity - e.spotsBooked), 0);
+
+  document.getElementById('stat-events').textContent = active.length;
+  document.getElementById('stat-bookings').textContent = totalBookings;
+  document.getElementById('stat-revenue').textContent = '$' + (revenue / 100).toFixed(0);
+  document.getElementById('stat-spots').textContent = spotsLeft;
+
+  const el = document.getElementById('dash-events-list');
+  el.innerHTML = active.length === 0
+    ? '<p style="color:var(--text-dim);text-align:center;padding:40px">No active events. <a href="#" onclick="showPanel(\'new-event\',null)">Add your first event →</a></p>'
+    : active.map(e => eventCard(e, true)).join('');
+}
+
+// ── Events ──
+function renderEvents() {
+  const el = document.getElementById('events-list');
+  if (allEvents.length === 0) {
+    el.innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:40px">No events yet. <a href="#" onclick="showPanel(\'new-event\',null)">Create one →</a></p>';
+    return;
+  }
+  el.innerHTML = allEvents.map(e => eventCard(e, false)).join('');
+}
+
+function eventCard(ev, compact) {
+  const spotsLeft = ev.capacity - ev.spotsBooked;
+  const pct = (ev.spotsBooked / ev.capacity) * 100;
+  const fillClass = pct >= 100 ? 'full' : pct >= 80 ? 'urgent' : '';
+  const dateStr = new Date(ev.date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+  return `
+  <div class="event-item">
+    <div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+        <span class="badge badge-type">${ev.type}</span>
+        ${ev.active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-full">Inactive</span>'}
+        ${spotsLeft === 0 ? '<span class="badge badge-full">SOLD OUT</span>' : ''}
+      </div>
+      <h3>${ev.title}</h3>
+      <p>${dateStr} · ${ev.time || '—'} · ${ev.location || '—'} · $${(ev.price/100).toFixed(0)}</p>
+      <div style="margin-top:8px;font-size:12px;color:var(--text-dim)">
+        ${ev.spotsBooked}/${ev.capacity} booked · <strong style="color:${spotsLeft===0?'#e74c3c':spotsLeft<=3?'var(--gold)':'#2ecc71'}">${spotsLeft} spots left</strong>
+      </div>
+      <div class="spots-bar"><div class="spots-fill ${fillClass}" style="width:${Math.min(pct,100)}%"></div></div>
+    </div>
+    <div class="event-actions">
+      <button class="btn btn-ghost btn-sm" onclick='openEdit(${JSON.stringify(ev)})'>Edit</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteEvent('${ev.id}','${ev.title}')">Delete</button>
+    </div>
+  </div>`;
+}
+
+// ── New Event ──
+async function saveEvent() {
+  const fb = document.getElementById('ev-feedback');
+  const title = document.getElementById('ev-title').value.trim();
+  const price = parseFloat(document.getElementById('ev-price').value) * 100;
+  const capacity = parseInt(document.getElementById('ev-capacity').value);
+
+  if (!title) { fb.style.color='#e74c3c'; fb.textContent='Title is required.'; return; }
+  if (!price) { fb.style.color='#e74c3c'; fb.textContent='Price is required.'; return; }
+  if (!capacity) { fb.style.color='#e74c3c'; fb.textContent='Capacity is required.'; return; }
+
+  const body = {
+    title, type: document.getElementById('ev-type').value,
+    description: document.getElementById('ev-desc').value,
+    date: document.getElementById('ev-date').value,
+    time: document.getElementById('ev-time').value,
+    duration: document.getElementById('ev-duration').value,
+    location: document.getElementById('ev-location').value,
+    price, capacity,
+  };
+
+  try {
+    const res = await fetch('/api/events', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) {
+      fb.style.color='#2ecc71'; fb.textContent='Event created!';
+      resetEventForm();
+      await loadAll();
+      showToast('Event created successfully!', 'success');
+      setTimeout(() => showPanel('events', document.querySelectorAll('.sidebar a')[1]), 800);
+    } else {
+      fb.style.color='#e74c3c'; fb.textContent='Failed to create event.';
+    }
+  } catch(e) {
+    fb.style.color='#e74c3c'; fb.textContent='Network error.';
+  }
+}
+
+function resetEventForm() {
+  ['ev-title','ev-desc','ev-date','ev-time','ev-duration','ev-location','ev-price','ev-capacity'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('ev-feedback').textContent = '';
+}
+
+// ── Edit Event ──
+function openEdit(ev) {
+  editingId = ev.id;
+  document.getElementById('edit-ev-id').value = ev.id;
+  document.getElementById('edit-ev-title').value = ev.title;
+  document.getElementById('edit-ev-date').value = ev.date;
+  document.getElementById('edit-ev-time').value = ev.time || '';
+  document.getElementById('edit-ev-price').value = (ev.price / 100).toFixed(2);
+  document.getElementById('edit-ev-capacity').value = ev.capacity;
+  document.getElementById('edit-ev-location').value = ev.location || '';
+  document.getElementById('edit-ev-desc').value = ev.description || '';
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('edit-modal').classList.remove('open');
+  editingId = null;
+}
+
+async function updateEvent() {
+  const id = document.getElementById('edit-ev-id').value;
+  const body = {
+    title: document.getElementById('edit-ev-title').value,
+    date: document.getElementById('edit-ev-date').value,
+    time: document.getElementById('edit-ev-time').value,
+    price: parseFloat(document.getElementById('edit-ev-price').value) * 100,
+    capacity: parseInt(document.getElementById('edit-ev-capacity').value),
+    location: document.getElementById('edit-ev-location').value,
+    description: document.getElementById('edit-ev-desc').value,
+  };
+  const res = await fetch(`/api/events/${id}`, {
+    method: 'PUT', credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (res.ok) {
+    closeModal(); await loadAll();
+    showToast('Event updated!', 'success');
+  } else {
+    showToast('Failed to update event.', 'error');
+  }
+}
+
+async function deleteEvent(id, title) {
+  if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+  const res = await fetch(`/api/events/${id}`, { method: 'DELETE', credentials: 'include' });
+  if (res.ok) { await loadAll(); showToast('Event deleted.', 'success'); }
+  else showToast('Failed to delete.', 'error');
+}
+
+// ── Bookings ──
+function populateBookingsFilter() {
+  const sel = document.getElementById('bookings-filter');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">All Events</option>';
+  allEvents.forEach(e => {
+    const opt = document.createElement('option');
+    opt.value = e.id; opt.textContent = e.title;
+    sel.appendChild(opt);
+  });
+  sel.value = current;
+}
+
+async function loadBookings() {
+  const eventId = document.getElementById('bookings-filter').value;
+  const url = eventId ? `/api/admin-bookings?eventId=${eventId}` : '/api/admin-bookings';
+  const tbody = document.getElementById('bookings-table');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:24px">Loading...</td></tr>';
+
+  try {
+    const res = await fetch(url, { credentials: 'include' });
+    const data = await res.json();
+
+    if (eventId) {
+      // Show bookings for specific event
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:24px">No bookings yet for this event.</td></tr>';
+        return;
+      }
+      const ev = allEvents.find(e => e.id === eventId);
+      tbody.innerHTML = data.map(b => `
+        <tr>
+          <td><strong style="color:#fff">${b.playerName}</strong></td>
+          <td>${b.parentName || '—'}</td>
+          <td><a href="mailto:${b.email}">${b.email}</a></td>
+          <td>${ev ? ev.title : b.eventId}</td>
+          <td class="paid-badge">$${(b.amount/100).toFixed(2)}</td>
+          <td style="color:var(--text-dim)">${new Date(b.createdAt).toLocaleDateString()}</td>
+        </tr>`).join('');
+    } else {
+      // Show event summary
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:24px">No events yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(e => `
+        <tr>
+          <td colspan="2"><strong style="color:#fff">${e.title}</strong></td>
+          <td><span class="badge badge-type">${e.type}</span></td>
+          <td>${new Date(e.date + 'T12:00:00').toLocaleDateString()}</td>
+          <td>${e.spotsBooked}/${e.capacity} booked</td>
+          <td style="color:${e.spotsLeft===0?'#e74c3c':e.spotsLeft<=3?'var(--gold)':'#2ecc71'}">${e.spotsLeft} left</td>
+        </tr>`).join('');
+    }
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#e74c3c;padding:24px">Failed to load bookings.</td></tr>';
+  }
+}
+
+// ── Toast ──
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Close modal on overlay click
+document.getElementById('edit-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
