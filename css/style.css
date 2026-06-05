@@ -281,7 +281,28 @@ p { color: var(--text); }
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, #060a0f 0%, #0a1520 55%, #080c10 100%);
+  background: #060a0f;
+}
+
+.hero-img-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: saturate(1.2) brightness(0.55) contrast(1.1);
+  transform: scale(1.04);
+  transition: transform 8s ease;
+}
+
+.hero:hover .hero-bg-img {
+  transform: scale(1.0);
 }
 
 .hero-video-wrap {
@@ -306,7 +327,9 @@ p { color: var(--text); }
 .hero-video-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(5, 8, 12, 0.72);
+  background:
+    linear-gradient(to right, rgba(5,8,12,0.92) 0%, rgba(5,8,12,0.65) 50%, rgba(5,8,12,0.3) 100%),
+    linear-gradient(to top, rgba(5,8,12,0.8) 0%, transparent 40%);
   z-index: 1;
 }
 
