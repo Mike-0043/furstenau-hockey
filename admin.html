@@ -123,9 +123,28 @@
     <img src="images/logo-f.png" alt="FHD">
     <h1>Admin Panel</h1>
     <p>Furstenau Hockey Development</p>
-    <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doLogin()">Sign In</button>
-    <p class="login-error" id="login-error"></p>
+    <!-- Login form -->
+    <div id="login-form">
+      <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doLogin()">Sign In</button>
+      <p class="login-error" id="login-error"></p>
+      <button onclick="showForgot()" style="background:none;border:none;color:var(--text-dim);font-size:12px;cursor:pointer;margin-top:12px;text-decoration:underline">Forgot password?</button>
+    </div>
+    <!-- Forgot password form -->
+    <div id="forgot-form" style="display:none">
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">A reset link will be sent to Craig's email.</p>
+      <button class="btn btn-primary" style="width:100%" onclick="doForgot()">Send Reset Link</button>
+      <p id="forgot-msg" style="font-size:12px;margin-top:10px;min-height:18px"></p>
+      <button onclick="showLogin()" style="background:none;border:none;color:var(--text-dim);font-size:12px;cursor:pointer;margin-top:8px;text-decoration:underline">← Back to login</button>
+    </div>
+    <!-- Reset password form -->
+    <div id="reset-form" style="display:none">
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px">Enter your new password.</p>
+      <input type="password" id="reset-pw" placeholder="New password" style="margin-bottom:10px">
+      <input type="password" id="reset-pw2" placeholder="Confirm new password">
+      <button class="btn btn-primary" style="width:100%;margin-top:10px" onclick="doReset()">Set New Password</button>
+      <p id="reset-msg" style="font-size:12px;margin-top:10px;min-height:18px"></p>
+    </div>
   </div>
 </div>
 
@@ -147,6 +166,7 @@
       <a href="#" onclick="showPanel('invoices',this)">Invoices</a>
       <a href="#" onclick="showPanel('new-event',this)">+ New Event</a>
       <a href="#" onclick="showPanel('new-invoice',this)">+ New Invoice</a>
+      <a href="#" onclick="showPanel('settings',this)" style="margin-top:auto;border-top:1px solid var(--border);padding-top:12px">⚙ Settings</a>
     </div>
     <div class="main">
 
@@ -337,6 +357,33 @@
         </div>
       </div>
 
+      <!-- SETTINGS -->
+      <div class="panel" id="panel-settings">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Settings</div>
+            <div class="panel-sub">Admin panel configuration</div>
+          </div>
+        </div>
+        <div class="card" style="max-width:480px">
+          <h3 style="font-size:15px;margin-bottom:20px;color:#fff">Change Password</h3>
+          <div class="field">
+            <div class="field-label">Current Password</div>
+            <input type="password" id="cur-pw" placeholder="Current password">
+          </div>
+          <div class="field">
+            <div class="field-label">New Password</div>
+            <input type="password" id="new-pw" placeholder="New password (min 6 characters)">
+          </div>
+          <div class="field">
+            <div class="field-label">Confirm New Password</div>
+            <input type="password" id="new-pw2" placeholder="Confirm new password">
+          </div>
+          <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+          <p id="pw-change-msg" style="margin-top:12px;font-size:13px;min-height:18px"></p>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -369,6 +416,98 @@
 <script>
 let allEvents = [];
 let editingId = null;
+
+// ── Forgot / Reset password (login screen) ──
+function showForgot() {
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('forgot-form').style.display = 'block';
+}
+function showLogin() {
+  document.getElementById('forgot-form').style.display = 'none';
+  document.getElementById('reset-form').style.display = 'none';
+  document.getElementById('login-form').style.display = 'block';
+}
+
+async function doForgot() {
+  const msg = document.getElementById('forgot-msg');
+  msg.style.color = 'var(--text-dim)'; msg.textContent = 'Sending...';
+  try {
+    const res = await fetch('/api/admin-login?action=forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+    const data = await res.json();
+    if (data.success) {
+      msg.style.color = '#2ecc71';
+      msg.textContent = 'Reset link sent to Craig\'s email!';
+      // If no email set up, show the reset URL directly
+      if (data.resetUrl && data.resetUrl.includes('reset=')) {
+        const token = new URL(data.resetUrl).searchParams.get('reset');
+        showResetForm(token);
+      }
+    } else {
+      msg.style.color = '#e74c3c'; msg.textContent = 'Failed to send reset link.';
+    }
+  } catch(e) { msg.style.color = '#e74c3c'; msg.textContent = 'Network error.'; }
+}
+
+function showResetForm(token) {
+  window._resetToken = token;
+  document.getElementById('forgot-form').style.display = 'none';
+  document.getElementById('reset-form').style.display = 'block';
+}
+
+async function doReset() {
+  const pw = document.getElementById('reset-pw').value;
+  const pw2 = document.getElementById('reset-pw2').value;
+  const msg = document.getElementById('reset-msg');
+  if (pw !== pw2) { msg.style.color='#e74c3c'; msg.textContent='Passwords do not match.'; return; }
+  if (pw.length < 6) { msg.style.color='#e74c3c'; msg.textContent='Minimum 6 characters.'; return; }
+  try {
+    const res = await fetch('/api/admin-login?action=reset', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: window._resetToken, newPassword: pw }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      msg.style.color='#2ecc71'; msg.textContent='Password updated! Please log in.';
+      setTimeout(() => { showLogin(); document.getElementById('reset-pw').value=''; document.getElementById('reset-pw2').value=''; }, 2000);
+    } else {
+      msg.style.color='#e74c3c'; msg.textContent = data.error || 'Reset failed.';
+    }
+  } catch(e) { msg.style.color='#e74c3c'; msg.textContent='Network error.'; }
+}
+
+// Check for reset token in URL on load
+(function() {
+  const params = new URLSearchParams(location.search);
+  const token = params.get('reset');
+  if (token) showResetForm(token);
+})();
+
+// ── Change password (settings panel) ──
+async function changePassword() {
+  const cur = document.getElementById('cur-pw').value;
+  const nw = document.getElementById('new-pw').value;
+  const nw2 = document.getElementById('new-pw2').value;
+  const msg = document.getElementById('pw-change-msg');
+  if (nw !== nw2) { msg.style.color='#e74c3c'; msg.textContent='New passwords do not match.'; return; }
+  if (nw.length < 6) { msg.style.color='#e74c3c'; msg.textContent='Minimum 6 characters.'; return; }
+  try {
+    const res = await fetch('/api/admin-login?action=change', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: cur, newPassword: nw }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      msg.style.color='#2ecc71'; msg.textContent='✓ Password updated successfully!';
+      document.getElementById('cur-pw').value='';
+      document.getElementById('new-pw').value='';
+      document.getElementById('new-pw2').value='';
+      showToast('Password updated!', 'success');
+    } else {
+      msg.style.color='#e74c3c'; msg.textContent = data.error || 'Failed to update password.';
+    }
+  } catch(e) { msg.style.color='#e74c3c'; msg.textContent='Network error.'; }
+}
 
 // ── Auth ──
 async function doLogin() {
