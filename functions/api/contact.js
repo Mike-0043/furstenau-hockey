@@ -39,7 +39,7 @@ ${message}
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Furstenau Hockey <noreply@furstenauhockey.com>',
+        from: 'Furstenau Hockey <onboarding@resend.dev>',
         to: ['craigfurstenau@hotmail.com'],
         reply_to: email,
         subject: `New Training Inquiry — ${name}`,

@@ -109,7 +109,7 @@ async function sendConfirmationEmail(env, ev, booking) {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: 'Furstenau Hockey <noreply@furstenauhockey.com>',
+      from: 'Furstenau Hockey <onboarding@resend.dev>',
       to: ['craigfurstenau@hotmail.com'],
       subject: `New Booking — ${ev.title} — ${booking.playerName}`,
       text: `New booking received!\n\nEvent: ${ev.title}\nDate: ${dateStr} at ${ev.time}\nLocation: ${ev.location}\n\nPlayer: ${booking.playerName}\nParent/Guardian: ${booking.parentName || '—'}\nEmail: ${booking.email}\nPhone: ${booking.phone || '—'}\nAmount Paid: ${priceStr}\n\nSpots remaining: ${ev.capacity - ev.spotsBooked - 1} of ${ev.capacity}`,
@@ -121,7 +121,7 @@ async function sendConfirmationEmail(env, ev, booking) {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: 'Furstenau Hockey <noreply@furstenauhockey.com>',
+      from: 'Furstenau Hockey <onboarding@resend.dev>',
       to: [booking.email],
       reply_to: 'craigfurstenau@hotmail.com',
       subject: `Booking Confirmed — ${ev.title}`,
