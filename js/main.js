@@ -186,13 +186,85 @@ async function loadEvents() {
 
 // ── Cart (multi-select) ──
 let _cart = {}; // { eventId: eventObject }
+let _waiverAccepted = false;
+let _pendingCartEvent = null;
 
+// ── Waiver Gate ──
 function toggleCart(ev) {
+  // If removing — no waiver needed
   if (_cart[ev.id]) {
     delete _cart[ev.id];
-  } else {
-    _cart[ev.id] = ev;
+    updateCartBar();
+    const btn = document.getElementById(`select-btn-${ev.id}`);
+    const card = document.getElementById(`event-card-${ev.id}`);
+    if (btn) { btn.textContent = 'Select'; btn.classList.remove('selected'); }
+    if (card) card.classList.remove('selected');
+    return;
   }
+
+  // If adding — show waiver gate first (only if not already accepted)
+  if (!_waiverAccepted) {
+    _pendingCartEvent = ev;
+    showWaiverGate();
+    return;
+  }
+
+  addToCart(ev);
+}
+
+function showWaiverGate() {
+  document.getElementById('waiver-gate-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Reset state
+  const checkbox = document.getElementById('waiver-gate-check');
+  const btn = document.getElementById('waiver-gate-btn');
+  const note = document.getElementById('waiver-scroll-note');
+  const label = document.getElementById('waiver-gate-label');
+  checkbox.checked = false;
+  checkbox.disabled = true;
+  btn.disabled = true;
+  note.style.display = 'block';
+  label.style.color = 'var(--text-dim)';
+  label.textContent = 'Scroll to read the full agreement before accepting';
+
+  // Listen for scroll
+  const scroll = document.getElementById('waiver-gate-scroll');
+  scroll.scrollTop = 0;
+  const onScroll = () => {
+    const atBottom = scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 20;
+    if (atBottom) {
+      checkbox.disabled = false;
+      note.style.display = 'none';
+      label.style.color = 'var(--text)';
+      label.textContent = 'I have read and agree to the Participation Agreement, Liability Waiver, No Refund Policy, and Equipment Requirements. If registering a minor, I confirm I am the parent or legal guardian.';
+      scroll.removeEventListener('scroll', onScroll);
+    }
+  };
+  scroll.addEventListener('scroll', onScroll);
+
+  checkbox.onchange = () => {
+    btn.disabled = !checkbox.checked;
+  };
+}
+
+function closeWaiverGate() {
+  document.getElementById('waiver-gate-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  _pendingCartEvent = null;
+}
+
+function acceptWaiverGate() {
+  _waiverAccepted = true;
+  closeWaiverGate();
+  if (_pendingCartEvent) {
+    addToCart(_pendingCartEvent);
+    _pendingCartEvent = null;
+  }
+}
+
+function addToCart(ev) {
+  _cart[ev.id] = ev;
   updateCartBar();
   // Update button state
   const btn = document.getElementById(`select-btn-${ev.id}`);
@@ -382,8 +454,9 @@ async function submitBooking() {
   const btn = document.getElementById('book-submit');
   const err = document.getElementById('book-error');
 
-  if (!document.getElementById('waiver-agree').checked) {
-    err.textContent = 'You must read and agree to the Participation Agreement to continue.';
+  // Waiver was already accepted at session select (waiver gate)
+  if (!_waiverAccepted) {
+    err.textContent = 'Please go back and accept the waiver before paying.';
     return;
   }
 

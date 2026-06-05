@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Furstenau Hockey Development | Elite Skill Training</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/favicon.png">
   <meta name="description" content="Craig Furstenau — national championship coach, developer of NHL talent, and Michigan's premier hockey skills trainer. Skating, puck control, and complete athlete development.">
 
   <!-- Open Graph / Social Sharing -->
@@ -502,6 +504,37 @@
     </div>
   </section>
 
+  <!-- WAIVER GATE MODAL -->
+  <div class="booking-overlay" id="waiver-gate-overlay">
+    <div class="booking-modal" style="max-width:600px">
+      <h3 style="margin-bottom:6px">Before You Register</h3>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:18px">Please read and accept the following agreement before selecting sessions.</p>
+
+      <div class="waiver-box" style="margin-bottom:0">
+        <div class="waiver-title">Participation Agreement &amp; Liability Waiver</div>
+        <div class="waiver-scroll" id="waiver-gate-scroll" style="max-height:280px">
+          <p><strong>EQUIPMENT REQUIREMENT</strong><br>All participants must arrive with full, appropriate hockey equipment in good condition — helmet with cage/visor, shoulder pads, elbow pads, gloves, shin guards, skates, stick, and hockey pants. Players without proper equipment will not be permitted to participate and no refund will be issued.</p>
+          <p><strong>NO REFUND POLICY</strong><br>All sales are final. No refunds will be issued for any reason including illness, injury, scheduling conflicts, or no-shows.</p>
+          <p><strong>DATE CHANGE POLICY</strong><br>One date change per booking may be requested subject to availability. Requests must be submitted to craigfurstenau@hotmail.com prior to the session. Date changes are not guaranteed and are subject to open availability only.</p>
+          <p><strong>RULES OF CONDUCT</strong><br>All participants are expected to maintain a respectful, coachable attitude. Furstenau Hockey Development reserves the right to remove any participant for disruptive, unsafe, or disrespectful behavior without refund.</p>
+          <p><strong>LIABILITY WAIVER</strong><br>Ice hockey is a physical sport that carries inherent risks of injury. By registering, participant (or parent/guardian on behalf of a minor) acknowledges and accepts these risks and releases Craig Furstenau and Furstenau Hockey Development from any and all liability for injury, illness, loss, or damage arising from participation.</p>
+          <p><strong>PHOTO/VIDEO CONSENT</strong><br>Furstenau Hockey Development may photograph or video participants during sessions for promotional use. Notify Craig in writing prior to the session to opt out.</p>
+          <p><strong>MINOR PARTICIPANTS</strong><br>If the player is under 18, a parent or legal guardian must complete this registration and accepts all terms on behalf of the minor.</p>
+        </div>
+        <p id="waiver-scroll-note" style="font-size:11px;color:var(--gold);text-align:center;margin:10px 0;letter-spacing:0.06em">↓ Please scroll to read the full agreement ↓</p>
+        <label class="waiver-check" style="margin-top:12px">
+          <input type="checkbox" id="waiver-gate-check" disabled>
+          <span id="waiver-gate-label" style="color:var(--text-dim)">Scroll to read the full agreement before accepting</span>
+        </label>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:20px">
+        <button class="btn btn-ghost" style="flex:1" onclick="closeWaiverGate()">Cancel</button>
+        <button class="btn btn-primary" style="flex:2" id="waiver-gate-btn" disabled onclick="acceptWaiverGate()">Accept &amp; Continue →</button>
+      </div>
+    </div>
+  </div>
+
   <!-- BOOKING MODAL — 3 STEP FLOW -->
   <div class="booking-overlay" id="booking-overlay">
     <div class="booking-modal">
@@ -584,22 +617,13 @@
         <!-- Summary -->
         <div class="booking-summary" id="booking-summary"></div>
 
-        <!-- Waiver -->
-        <div class="waiver-box">
-          <div class="waiver-title">Participation Agreement &amp; Liability Waiver</div>
-          <div class="waiver-scroll">
-            <p><strong>EQUIPMENT REQUIREMENT</strong><br>All participants must arrive with full, appropriate hockey equipment in good condition — helmet with cage/visor, shoulder pads, elbow pads, gloves, shin guards, skates, stick, and hockey pants. Players without proper equipment will not be permitted to participate and no refund will be issued.</p>
-            <p><strong>NO REFUND POLICY</strong><br>All sales are final. No refunds will be issued for any reason including illness, injury, scheduling conflicts, or no-shows.</p>
-            <p><strong>DATE CHANGE POLICY</strong><br>One date change per booking may be requested subject to availability. Requests must be submitted to craigfurstenau@hotmail.com prior to the session. Date changes are not guaranteed and are subject to open availability only.</p>
-            <p><strong>RULES OF CONDUCT</strong><br>All participants are expected to maintain a respectful, coachable attitude. Furstenau Hockey Development reserves the right to remove any participant for disruptive, unsafe, or disrespectful behavior without refund.</p>
-            <p><strong>LIABILITY WAIVER</strong><br>Ice hockey is a physical sport that carries inherent risks of injury. By registering, participant (or parent/guardian on behalf of a minor) acknowledges and accepts these risks and releases Craig Furstenau and Furstenau Hockey Development from any and all liability for injury, illness, loss, or damage arising from participation.</p>
-            <p><strong>PHOTO/VIDEO CONSENT</strong><br>Furstenau Hockey Development may photograph or video participants during sessions for promotional use. Notify Craig in writing prior to the session to opt out.</p>
-            <p><strong>MINOR PARTICIPANTS</strong><br>If the player is under 18, a parent or legal guardian must complete this registration and accepts all terms on behalf of the minor.</p>
+        <!-- Waiver acknowledgment (already read + accepted at session select) -->
+        <div class="waiver-box" style="background:rgba(39,174,96,0.06);border-color:rgba(39,174,96,0.25)">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="color:#2ecc71;font-size:18px">✓</span>
+            <span style="font-size:13px;font-weight:600;color:#2ecc71">Participation Agreement &amp; Liability Waiver Accepted</span>
           </div>
-          <label class="waiver-check">
-            <input type="checkbox" id="waiver-agree">
-            <span>I have read and agree to the Participation Agreement, Liability Waiver, No Refund Policy, and Equipment Requirements. If registering a minor, I confirm I am the parent or legal guardian.</span>
-          </label>
+          <p style="font-size:12px;color:var(--text-dim)">You accepted the waiver when selecting your sessions. By clicking Pay Now you confirm your agreement to all terms including the no refund policy, equipment requirements, and liability waiver.</p>
         </div>
 
         <div style="display:flex;gap:12px;margin-top:16px">
