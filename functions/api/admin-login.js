@@ -7,8 +7,16 @@
 
 import { jsonResponse, errorResponse, verifyAdmin } from '../_utils.js';
 
+async function checkPassword(password, env) {
+  // The ADMIN_PASSWORD env var ALWAYS works as a master key (recovery method)
+  const masterKey = env.ADMIN_PASSWORD || 'fhd-admin-2025';
+  if (password === masterKey) return true;
+  // Also check KV password (set when changed via admin panel)
+  const kvPassword = await env.FHD_KV.get('admin:password', 'text');
+  return kvPassword ? password === kvPassword : false;
+}
+
 async function getPassword(env) {
-  // Check KV first (allows changing via admin), fall back to env var
   const kvPassword = await env.FHD_KV.get('admin:password', 'text');
   return kvPassword || env.ADMIN_PASSWORD || 'fhd-admin-2025';
 }
@@ -67,9 +75,7 @@ export async function onRequestPost({ request, env }) {
 
     // ── LOGIN ──
     const { password } = await request.json();
-    const correct = await getPassword(env);
-
-    if (password !== correct) return errorResponse('Incorrect password', 401);
+    if (!await checkPassword(password, env)) return errorResponse('Incorrect password', 401);
 
     const token = crypto.randomUUID();
     const expires = Date.now() + 8 * 60 * 60 * 1000;
