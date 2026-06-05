@@ -184,12 +184,97 @@ async function loadEvents() {
   }
 }
 
+// ── Session Picker Modal ──
+let _allEvents = [];
+
+async function openSessionPicker() {
+  document.getElementById('session-picker-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const list = document.getElementById('session-picker-list');
+
+  if (!_allEvents.length) {
+    try {
+      const res = await fetch('/api/events');
+      _allEvents = await res.json();
+    } catch {
+      list.innerHTML = '<div style="text-align:center;padding:32px;color:#e74c3c">Could not load sessions. Try again.</div>';
+      return;
+    }
+  }
+
+  const available = _allEvents.filter(e => e.active && (e.capacity - e.spotsBooked) > 0);
+
+  if (!available.length) {
+    list.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-dim)">No sessions available right now. <a href="#contact" style="color:var(--blue-light)" onclick="closeSessionPicker()">Contact Craig</a> for availability.</div>';
+    return;
+  }
+
+  const typeLabels = { individual:'Individual','small-group':'Small Group', camp:'Camp', clinic:'Clinic', team:'Team', 'ice-time':'Ice Time' };
+
+  list.innerHTML = available.map(ev => {
+    const spotsLeft = ev.capacity - ev.spotsBooked;
+    const urgent = spotsLeft <= 3;
+    const dateStr = new Date(ev.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    const selected = !!_cart[ev.id];
+    return `
+    <div class="picker-row ${selected ? 'picker-selected' : ''}" id="picker-row-${ev.id}">
+      <div class="picker-info">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px">
+          <span class="event-type-badge">${typeLabels[ev.type] || ev.type}</span>
+          ${urgent ? `<span class="event-urgent">Only ${spotsLeft} left!</span>` : ''}
+        </div>
+        <strong>${ev.title}</strong>
+        <div class="picker-meta">${dateStr}${ev.time ? ' · ' + fmt12(ev.time) : ''}${ev.location ? ' · ' + ev.location : ''}</div>
+        <div class="picker-spots" style="color:${urgent?'#e8a020':'#2ecc71'}">${spotsLeft} of ${ev.capacity} spots left</div>
+      </div>
+      <div class="picker-right">
+        <span class="picker-price">$${(ev.price/100).toFixed(0)}</span>
+        <button class="event-select-btn ${selected ? 'selected' : ''}" id="picker-btn-${ev.id}" onclick='pickerToggle(${JSON.stringify(ev)})'>
+          ${selected ? '✓ Selected' : 'Select'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+
+  updatePickerCart();
+}
+
+function pickerToggle(ev) {
+  if (_cart[ev.id]) {
+    delete _cart[ev.id];
+  } else {
+    _cart[ev.id] = ev;
+  }
+  const btn = document.getElementById(`picker-btn-${ev.id}`);
+  const row = document.getElementById(`picker-row-${ev.id}`);
+  if (btn) { btn.textContent = _cart[ev.id] ? '✓ Selected' : 'Select'; btn.classList.toggle('selected', !!_cart[ev.id]); }
+  if (row) row.classList.toggle('picker-selected', !!_cart[ev.id]);
+  updatePickerCart();
+  updateCartBar(); // also update main cart bar
+}
+
+function updatePickerCart() {
+  const items = Object.values(_cart);
+  const bar = document.getElementById('picker-cart-bar');
+  if (!items.length) { bar.style.display = 'none'; return; }
+  bar.style.display = 'flex';
+  const total = items.reduce((s, e) => s + e.price, 0);
+  document.getElementById('picker-cart-count').textContent = `${items.length} session${items.length>1?'s':''}`;
+  document.getElementById('picker-cart-total').textContent = `$${(total/100).toFixed(2)}`;
+}
+
+function closeSessionPicker() {
+  document.getElementById('session-picker-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
 // ── Cart (multi-select) ──
 let _cart = {}; // { eventId: eventObject }
 let _waiverAccepted = false;
 let _pendingCartEvent = null;
 
-// ── Waiver Gate ──
+// ── Cart toggle from schedule section ──
 function toggleCart(ev) {
   // If removing — no waiver needed
   if (_cart[ev.id]) {
@@ -294,7 +379,8 @@ function updateCartBar() {
 function openBookingFromCart() {
   const items = Object.values(_cart);
   if (!items.length) return;
-  _currentEvent = items; // array for multi
+  closeSessionPicker(); // close picker if open
+  _currentEvent = items;
   openBookingModal(items);
 }
 
@@ -436,6 +522,34 @@ function goStep(step, init = false) {
   document.getElementById(`bstep-${step}`).classList.add('active');
   document.getElementById(`bpanel-${step}`).style.display = 'block';
 
+  // Step 3 — set up waiver scroll gate
+  if (step === 3) {
+    const scroll = document.getElementById('step3-waiver-scroll');
+    const checkbox = document.getElementById('waiver-agree');
+    const btn = document.getElementById('book-submit');
+    const note = document.getElementById('step3-scroll-note');
+    const label = document.getElementById('waiver-agree-label');
+    scroll.scrollTop = 0;
+    checkbox.checked = false;
+    checkbox.disabled = true;
+    btn.disabled = true;
+    note.style.display = 'block';
+    label.style.color = 'var(--text-dim)';
+    label.textContent = 'Scroll to read the full agreement before accepting';
+
+    const onScroll = () => {
+      if (scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 20) {
+        checkbox.disabled = false;
+        note.style.display = 'none';
+        label.style.color = 'var(--text)';
+        label.textContent = 'I have read and agree to the Participation Agreement, Liability Waiver, No Refund Policy, and Equipment Requirements. If registering a minor, I confirm I am the parent or legal guardian.';
+        scroll.removeEventListener('scroll', onScroll);
+      }
+    };
+    scroll.addEventListener('scroll', onScroll);
+    checkbox.onchange = () => { btn.disabled = !checkbox.checked; };
+  }
+
   // Reset error
   if (!init) document.getElementById('book-error').textContent = '';
 }
@@ -454,11 +568,13 @@ async function submitBooking() {
   const btn = document.getElementById('book-submit');
   const err = document.getElementById('book-error');
 
-  // Waiver was already accepted at session select (waiver gate)
-  if (!_waiverAccepted) {
-    err.textContent = 'Please go back and accept the waiver before paying.';
+  // Waiver checkbox in step 3
+  const waiverCheck = document.getElementById('waiver-agree');
+  if (!waiverCheck || !waiverCheck.checked) {
+    err.textContent = 'Please read and accept the waiver before paying.';
     return;
   }
+  const waiverAcceptedAt = new Date().toISOString();
 
   const playerName = `${document.getElementById('book-player-first').value.trim()} ${document.getElementById('book-player-last').value.trim()}`;
   const parentName = document.getElementById('book-parent').value.trim();
@@ -490,6 +606,7 @@ async function submitBooking() {
         emergencyName: emergSame ? parentName : document.getElementById('book-emerg-name').value,
         emergencyPhone: emergSame ? phone : document.getElementById('book-emerg-phone').value,
         waiverAccepted: true,
+        waiverAcceptedAt,
         totalAmount: totalCents,
       }),
     });

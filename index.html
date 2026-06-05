@@ -73,7 +73,7 @@
       <p class="hero-sub reveal reveal-delay-2">Three national championships. Two decades of developing players from youth hockey to the NHL. One proven system.</p>
       <div class="hero-cta reveal reveal-delay-3">
         <a href="#contact" class="btn btn-primary">Get Started</a>
-        <a href="#schedule" class="btn btn-schedule">Book a Session</a>
+        <button class="btn btn-schedule" onclick="openSessionPicker()">Book a Session</button>
         <a href="#clips" class="btn btn-ghost">Watch Clips</a>
       </div>
     </div>
@@ -505,6 +505,25 @@
     </div>
   </section>
 
+  <!-- SESSION PICKER MODAL -->
+  <div class="booking-overlay" id="session-picker-overlay">
+    <div class="booking-modal" style="max-width:680px">
+      <button class="booking-close" onclick="closeSessionPicker()">✕</button>
+      <h3 style="margin-bottom:6px">Available Sessions</h3>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:20px">Select one or more sessions then click Register to proceed.</p>
+      <div id="session-picker-list">
+        <div style="text-align:center;padding:32px;color:var(--text-dim)">Loading sessions...</div>
+      </div>
+      <div class="cart-bar" id="picker-cart-bar" style="display:none;position:static;margin-top:20px;bottom:auto;box-shadow:none">
+        <div class="cart-bar-left">
+          <span id="picker-cart-count">0 sessions</span>
+          <span class="cart-total" id="picker-cart-total">$0.00</span>
+        </div>
+        <button class="btn btn-primary" onclick="openBookingFromCart()">Register →</button>
+      </div>
+    </div>
+  </div>
+
   <!-- WAIVER GATE MODAL -->
   <div class="booking-overlay" id="waiver-gate-overlay">
     <div class="booking-modal" style="max-width:600px">
@@ -547,7 +566,7 @@
         <div class="bstep-line"></div>
         <div class="bstep" id="bstep-2"><span>2</span> Your Info</div>
         <div class="bstep-line"></div>
-        <div class="bstep" id="bstep-3"><span>3</span> Confirm &amp; Pay</div>
+        <div class="bstep" id="bstep-3"><span>3</span> Waiver &amp; Pay</div>
       </div>
 
       <!-- STEP 1: Selected sessions summary -->
@@ -611,25 +630,35 @@
         <p id="step2-error" style="color:#e74c3c;font-size:13px;margin-top:10px;min-height:18px"></p>
       </div>
 
-      <!-- STEP 3: Review, Waiver & Pay -->
+      <!-- STEP 3: Waiver & Pay -->
       <div class="booking-step-panel" id="bpanel-3" style="display:none">
-        <h3>Review &amp; Confirm</h3>
+        <h3>Waiver &amp; Payment</h3>
 
         <!-- Summary -->
         <div class="booking-summary" id="booking-summary"></div>
 
-        <!-- Waiver acknowledgment (already read + accepted at session select) -->
-        <div class="waiver-box" style="background:rgba(39,174,96,0.06);border-color:rgba(39,174,96,0.25)">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-            <span style="color:#2ecc71;font-size:18px">✓</span>
-            <span style="font-size:13px;font-weight:600;color:#2ecc71">Participation Agreement &amp; Liability Waiver Accepted</span>
+        <!-- Full Waiver — must scroll and accept -->
+        <div class="waiver-box">
+          <div class="waiver-title">Participation Agreement &amp; Liability Waiver</div>
+          <div class="waiver-scroll" id="step3-waiver-scroll" style="max-height:220px">
+            <p><strong>EQUIPMENT REQUIREMENT</strong><br>All participants must arrive with full, appropriate hockey equipment in good condition — helmet with cage/visor, shoulder pads, elbow pads, gloves, shin guards, skates, stick, and hockey pants. Players without proper equipment will not be permitted to participate and no refund will be issued.</p>
+            <p><strong>NO REFUND POLICY</strong><br>All sales are final. No refunds will be issued for any reason including illness, injury, scheduling conflicts, or no-shows.</p>
+            <p><strong>DATE CHANGE POLICY</strong><br>One date change per booking may be requested subject to availability. Requests must be submitted to craigfurstenau@hotmail.com prior to the session. Date changes are not guaranteed and are subject to open availability only.</p>
+            <p><strong>RULES OF CONDUCT</strong><br>All participants are expected to maintain a respectful, coachable attitude. Furstenau Hockey Development reserves the right to remove any participant for disruptive, unsafe, or disrespectful behavior without refund.</p>
+            <p><strong>LIABILITY WAIVER</strong><br>Ice hockey is a physical sport that carries inherent risks of injury. By registering, participant (or parent/guardian on behalf of a minor) acknowledges and accepts these risks and releases Craig Furstenau and Furstenau Hockey Development from any and all liability for injury, illness, loss, or damage arising from participation.</p>
+            <p><strong>PHOTO/VIDEO CONSENT</strong><br>Furstenau Hockey Development may photograph or video participants during sessions for promotional use. Notify Craig in writing prior to the session to opt out.</p>
+            <p><strong>MINOR PARTICIPANTS</strong><br>If the player is under 18, a parent or legal guardian must complete this registration and accepts all terms on behalf of the minor.</p>
           </div>
-          <p style="font-size:12px;color:var(--text-dim)">You accepted the waiver when selecting your sessions. By clicking Pay Now you confirm your agreement to all terms including the no refund policy, equipment requirements, and liability waiver.</p>
+          <p id="step3-scroll-note" style="font-size:11px;color:var(--gold);text-align:center;margin:10px 0;letter-spacing:0.06em">↓ Scroll to read the full agreement ↓</p>
+          <label class="waiver-check" style="margin-top:8px">
+            <input type="checkbox" id="waiver-agree" disabled>
+            <span id="waiver-agree-label" style="color:var(--text-dim)">Scroll to read the full agreement before accepting</span>
+          </label>
         </div>
 
         <div style="display:flex;gap:12px;margin-top:16px">
           <button class="btn btn-ghost" style="flex:1" onclick="goStep(2)">← Back</button>
-          <button class="btn btn-primary" style="flex:2" id="book-submit" onclick="submitBooking()">Pay Now — <span id="pay-amount"></span> →</button>
+          <button class="btn btn-primary" style="flex:2" id="book-submit" onclick="submitBooking()" disabled>Pay Now — <span id="pay-amount"></span> →</button>
         </div>
         <p class="booking-note">🔒 Secure checkout via Stripe. Test card: 4242 4242 4242 4242</p>
         <p id="book-error" style="color:#e74c3c;font-size:13px;margin-top:8px;min-height:18px"></p>

@@ -10,7 +10,7 @@ import { jsonResponse, errorResponse } from '../_utils.js';
 export async function onRequestPost({ request, env }) {
   try {
     const body = await request.json();
-    const { eventId, eventIds, playerName, parentName, email, phone, dob, team, relation, emergencyName, emergencyPhone } = body;
+    const { eventId, eventIds, playerName, parentName, email, phone, dob, team, relation, emergencyName, emergencyPhone, waiverAccepted, waiverAcceptedAt } = body;
 
     if (!playerName || !email) return errorResponse('Missing required fields', 400);
 
@@ -39,6 +39,7 @@ export async function onRequestPost({ request, env }) {
           id: bookingId, eventId: ev.id, playerName, parentName: parentName || '',
           email, phone: phone || '', dob: dob || '', team: team || '',
           relation: relation || '', emergencyName: emergencyName || '', emergencyPhone: emergencyPhone || '',
+          waiverAccepted: !!waiverAccepted, waiverAcceptedAt: waiverAcceptedAt || new Date().toISOString(),
           stripeSessionId: 'mock_' + bookingId,
           paid: true, amount: ev.price,
           createdAt: new Date().toISOString(),
