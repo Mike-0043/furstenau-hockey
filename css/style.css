@@ -1649,3 +1649,158 @@ cite {
   color: rgba(255,255,255,0.7);
   line-height: 1.5;
 }
+
+/* ── 3-Step Booking Flow ── */
+.booking-steps {
+  display: flex;
+  align-items: center;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.bstep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.bstep span {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.bstep.active {
+  color: var(--white);
+}
+
+.bstep.active span {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.bstep.done span {
+  background: #27ae60;
+  border-color: #27ae60;
+  color: #fff;
+}
+
+.bstep-line {
+  flex: 1;
+  height: 1.5px;
+  background: rgba(255,255,255,0.1);
+  margin: 0 10px;
+}
+
+.booking-step-panel h3 {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+
+.booking-step-panel label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.booking-step-panel input,
+.booking-step-panel select {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 11px 14px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 14px;
+  width: 100%;
+  transition: border-color var(--transition);
+  -webkit-appearance: none;
+  margin-bottom: 0;
+}
+
+.booking-step-panel input:focus,
+.booking-step-panel select:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+
+.booking-step-panel select option { background: var(--dark2); }
+
+.bsection-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-light);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.spots-warning {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-top: 10px;
+  min-height: 18px;
+}
+
+/* Booking summary box */
+.booking-summary {
+  background: rgba(26,111,190,0.08);
+  border: 1px solid rgba(58,143,216,0.25);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.booking-summary .sum-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.booking-summary .sum-row:last-child { margin-bottom: 0; }
+
+.booking-summary .sum-row span:first-child {
+  color: var(--text-dim);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.booking-summary .sum-total {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+}

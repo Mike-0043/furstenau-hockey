@@ -494,46 +494,114 @@
     </div>
   </section>
 
-  <!-- BOOKING MODAL -->
+  <!-- BOOKING MODAL — 3 STEP FLOW -->
   <div class="booking-overlay" id="booking-overlay">
     <div class="booking-modal">
       <button class="booking-close" onclick="closeBooking()">✕</button>
-      <div class="booking-event-info" id="booking-event-info"></div>
-      <h3>Reserve Your Spot</h3>
-      <form id="booking-form" onsubmit="submitBooking(event)">
-        <input type="hidden" id="book-event-id">
-        <div class="form-row">
-          <div><label>Player Name *</label><input type="text" id="book-player" required placeholder="First Last"></div>
-          <div><label>Parent / Guardian</label><input type="text" id="book-parent" placeholder="First Last (if minor)"></div>
-        </div>
-        <div class="form-row">
-          <div><label>Email Address *</label><input type="email" id="book-email" required placeholder="email@example.com"></div>
-          <div><label>Phone Number</label><input type="tel" id="book-phone" placeholder="(555) 555-5555"></div>
-        </div>
-        <div class="booking-price-row" id="booking-price-row"></div>
 
-        <!-- Waiver & Terms -->
+      <!-- Step indicator -->
+      <div class="booking-steps">
+        <div class="bstep active" id="bstep-1"><span>1</span> Session</div>
+        <div class="bstep-line"></div>
+        <div class="bstep" id="bstep-2"><span>2</span> Your Info</div>
+        <div class="bstep-line"></div>
+        <div class="bstep" id="bstep-3"><span>3</span> Confirm &amp; Pay</div>
+      </div>
+
+      <!-- STEP 1: Session summary -->
+      <div class="booking-step-panel" id="bpanel-1">
+        <h3>Selected Session</h3>
+        <div id="booking-event-info"></div>
+        <div class="booking-price-row" id="booking-price-row"></div>
+        <div class="spots-warning" id="spots-warning"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:20px" onclick="goStep(2)">Continue — Enter Your Info →</button>
+      </div>
+
+      <!-- STEP 2: Player & Guardian Info -->
+      <div class="booking-step-panel" id="bpanel-2" style="display:none">
+        <h3>Player &amp; Contact Info</h3>
+        <input type="hidden" id="book-event-id">
+
+        <div class="bsection-label">Player Information</div>
+        <div class="form-row">
+          <div><label>Player First Name *</label><input type="text" id="book-player-first" placeholder="First Name"></div>
+          <div><label>Player Last Name *</label><input type="text" id="book-player-last" placeholder="Last Name"></div>
+        </div>
+        <div class="form-row">
+          <div><label>Date of Birth *</label><input type="date" id="book-dob"></div>
+          <div><label>Team / Level</label><input type="text" id="book-team" placeholder="e.g. Meijer 2007 AAA"></div>
+        </div>
+
+        <div class="bsection-label" style="margin-top:20px">Parent / Guardian</div>
+        <div class="form-row">
+          <div><label>Parent/Guardian Name *</label><input type="text" id="book-parent" placeholder="First Last"></div>
+          <div><label>Phone Number *</label><input type="tel" id="book-phone" placeholder="(555) 555-5555"></div>
+        </div>
+        <div class="form-row">
+          <div><label>Email Address *</label><input type="email" id="book-email" placeholder="email@example.com"></div>
+          <div><label>Relationship to Player *</label>
+            <select id="book-relation">
+              <option value="">Select...</option>
+              <option>Parent</option>
+              <option>Guardian</option>
+              <option>Self (Adult Player)</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bsection-label" style="margin-top:20px">Emergency Contact</div>
+        <label class="waiver-check" style="margin-bottom:14px">
+          <input type="checkbox" id="emergency-same" onchange="toggleEmergency(this)">
+          <span>Same as parent/guardian above</span>
+        </label>
+        <div id="emergency-fields">
+          <div class="form-row">
+            <div><label>Emergency Contact Name *</label><input type="text" id="book-emerg-name" placeholder="First Last"></div>
+            <div><label>Emergency Contact Phone *</label><input type="tel" id="book-emerg-phone" placeholder="(555) 555-5555"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:20px">
+          <button class="btn btn-ghost" style="flex:1" onclick="goStep(1)">← Back</button>
+          <button class="btn btn-primary" style="flex:2" onclick="goStep(3)">Continue — Review &amp; Pay →</button>
+        </div>
+        <p id="step2-error" style="color:#e74c3c;font-size:13px;margin-top:10px;min-height:18px"></p>
+      </div>
+
+      <!-- STEP 3: Review, Waiver & Pay -->
+      <div class="booking-step-panel" id="bpanel-3" style="display:none">
+        <h3>Review &amp; Confirm</h3>
+
+        <!-- Summary -->
+        <div class="booking-summary" id="booking-summary"></div>
+
+        <!-- Waiver -->
         <div class="waiver-box">
           <div class="waiver-title">Participation Agreement &amp; Liability Waiver</div>
           <div class="waiver-scroll">
-            <p><strong>EQUIPMENT REQUIREMENT</strong><br>All participants must arrive with full, appropriate hockey equipment in good condition. This includes helmet with cage/visor, shoulder pads, elbow pads, gloves, shin guards, skates, stick, and hockey pants. Players without proper equipment will not be permitted to participate and no refund will be issued.</p>
+            <p><strong>EQUIPMENT REQUIREMENT</strong><br>All participants must arrive with full, appropriate hockey equipment in good condition — helmet with cage/visor, shoulder pads, elbow pads, gloves, shin guards, skates, stick, and hockey pants. Players without proper equipment will not be permitted to participate and no refund will be issued.</p>
             <p><strong>NO REFUND POLICY</strong><br>All sales are final. No refunds will be issued for any reason including illness, injury, scheduling conflicts, or no-shows.</p>
-            <p><strong>DATE CHANGE POLICY</strong><br>One date change per booking may be requested subject to availability. Date change requests must be submitted by emailing craigfurstenau@hotmail.com prior to the session. Date changes are not guaranteed and are subject to open availability only. No refund will be issued if a suitable date cannot be found.</p>
-            <p><strong>RULES OF CONDUCT</strong><br>All participants are expected to maintain a respectful, coachable attitude on and off the ice. Furstenau Hockey Development reserves the right to remove any participant for disruptive, unsafe, or disrespectful behavior without refund.</p>
-            <p><strong>LIABILITY WAIVER</strong><br>Ice hockey is a physical sport that carries inherent risks of injury. By registering, participant (or parent/guardian on behalf of a minor) acknowledges and accepts these risks. Participant releases Craig Furstenau and Furstenau Hockey Development from any and all liability for injury, illness, loss, or damage arising from participation in any training session, clinic, or camp.</p>
-            <p><strong>PHOTO/VIDEO CONSENT</strong><br>Furstenau Hockey Development may photograph or video participants during sessions for promotional use. By registering you consent to this use unless you notify Craig in writing prior to the session.</p>
-            <p><strong>MINOR PARTICIPANTS</strong><br>If the player is under 18 years of age, a parent or legal guardian must complete this registration and accepts all terms on behalf of the minor.</p>
+            <p><strong>DATE CHANGE POLICY</strong><br>One date change per booking may be requested subject to availability. Requests must be submitted to craigfurstenau@hotmail.com prior to the session. Date changes are not guaranteed and are subject to open availability only.</p>
+            <p><strong>RULES OF CONDUCT</strong><br>All participants are expected to maintain a respectful, coachable attitude. Furstenau Hockey Development reserves the right to remove any participant for disruptive, unsafe, or disrespectful behavior without refund.</p>
+            <p><strong>LIABILITY WAIVER</strong><br>Ice hockey is a physical sport that carries inherent risks of injury. By registering, participant (or parent/guardian on behalf of a minor) acknowledges and accepts these risks and releases Craig Furstenau and Furstenau Hockey Development from any and all liability for injury, illness, loss, or damage arising from participation.</p>
+            <p><strong>PHOTO/VIDEO CONSENT</strong><br>Furstenau Hockey Development may photograph or video participants during sessions for promotional use. Notify Craig in writing prior to the session to opt out.</p>
+            <p><strong>MINOR PARTICIPANTS</strong><br>If the player is under 18, a parent or legal guardian must complete this registration and accepts all terms on behalf of the minor.</p>
           </div>
           <label class="waiver-check">
-            <input type="checkbox" id="waiver-agree" required>
-            <span>I have read and agree to the Participation Agreement, Liability Waiver, No Refund Policy, and Equipment Requirements above. If registering a minor, I confirm I am the parent or legal guardian.</span>
+            <input type="checkbox" id="waiver-agree">
+            <span>I have read and agree to the Participation Agreement, Liability Waiver, No Refund Policy, and Equipment Requirements. If registering a minor, I confirm I am the parent or legal guardian.</span>
           </label>
         </div>
 
-        <button type="submit" class="btn btn-primary" id="book-submit" style="width:100%;margin-top:8px">Proceed to Payment →</button>
+        <div style="display:flex;gap:12px;margin-top:16px">
+          <button class="btn btn-ghost" style="flex:1" onclick="goStep(2)">← Back</button>
+          <button class="btn btn-primary" style="flex:2" id="book-submit" onclick="submitBooking()">Pay Now — <span id="pay-amount"></span> →</button>
+        </div>
         <p class="booking-note">🔒 Secure checkout via Stripe. Test card: 4242 4242 4242 4242</p>
         <p id="book-error" style="color:#e74c3c;font-size:13px;margin-top:8px;min-height:18px"></p>
-      </form>
+      </div>
+
     </div>
   </div>
 
