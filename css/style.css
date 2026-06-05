@@ -589,7 +589,18 @@ p { color: var(--text); }
   user-select: none;
 }
 
-.method-icon { font-size: 30px; margin-bottom: 14px; }
+.method-icon {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--blue-light);
+  margin-bottom: 14px;
+  border: 1px solid rgba(58,143,216,0.3);
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
 
 .method-card p {
   font-size: 14.5px;
@@ -728,7 +739,7 @@ p { color: var(--text); }
   transform: translateY(-4px);
 }
 
-.card-icon { font-size: 28px; margin-bottom: 16px; }
+.card-icon { display: none; }
 
 .card p {
   font-size: 14px;
@@ -849,7 +860,7 @@ p { color: var(--text); }
 
 .alumni-level:hover { border-color: rgba(42,132,216,0.3); }
 
-.level-icon { font-size: 26px; margin-bottom: 12px; }
+.level-icon { display: none; }
 
 .alumni-level p {
   font-size: 13px;
@@ -1093,7 +1104,12 @@ cite {
   gap: 10px;
 }
 
-.contact-icon { font-size: 16px; flex-shrink: 0; }
+.contact-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--blue-light);
+}
 
 .contact-list a {
   font-size: 15px;
@@ -1189,7 +1205,7 @@ cite {
 
 .footer-links {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   align-items: center;
 }
 
@@ -1198,8 +1214,11 @@ cite {
   font-weight: 500;
   color: var(--text-dim);
   transition: color var(--transition);
+  display: flex;
+  align-items: center;
 }
 .footer-links a:hover { color: var(--white); }
+.footer-links a svg { display: block; }
 
 .footer-copy {
   width: 100%;
