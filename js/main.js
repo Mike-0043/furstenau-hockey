@@ -146,6 +146,15 @@ async function submitForm(e) {
   btn.disabled = false;
 }
 
+// ── Time formatter (24hr → 12hr) ──
+function fmt12(time24) {
+  if (!time24) return '';
+  const [h, m] = time24.split(':').map(Number);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hour = h % 12 || 12;
+  return `${hour}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
 // ── Events / Schedule ──
 async function loadEvents() {
   const container = document.getElementById('events-container');
@@ -194,7 +203,7 @@ function eventCard(ev) {
     <h3 class="event-card-title">${ev.title}</h3>
     <div class="event-card-meta">
       <span>${dateStr}</span>
-      ${ev.time ? `<span>${ev.time}</span>` : ''}
+      ${ev.time ? `<span>${fmt12(ev.time)}</span>` : ''}
       ${ev.location ? `<span>${ev.location}</span>` : ''}
       ${ev.duration ? `<span>${ev.duration}</span>` : ''}
     </div>
@@ -233,7 +242,7 @@ function openBooking(ev) {
   document.getElementById('booking-event-info').innerHTML = `
     <div class="booking-event-summary">
       <strong>${ev.title}</strong>
-      <span>${dateStr}${ev.time ? ' · ' + ev.time : ''}${ev.location ? ' · ' + ev.location : ''}</span>
+      <span>${dateStr}${ev.time ? ' · ' + fmt12(ev.time) : ''}${ev.location ? ' · ' + ev.location : ''}</span>
       ${ev.duration ? `<span>${ev.duration}</span>` : ''}
     </div>`;
 
@@ -286,7 +295,7 @@ function goStep(step, init = false) {
     const dateStr = new Date(_currentEvent.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
     document.getElementById('booking-summary').innerHTML = `
       <div class="sum-row"><span>Session</span><span>${_currentEvent.title}</span></div>
-      <div class="sum-row"><span>Date</span><span>${dateStr}${_currentEvent.time ? ' · ' + _currentEvent.time : ''}</span></div>
+      <div class="sum-row"><span>Date</span><span>${dateStr}${_currentEvent.time ? ' · ' + fmt12(_currentEvent.time) : ''}</span></div>
       <div class="sum-row"><span>Location</span><span>${_currentEvent.location || '—'}</span></div>
       <div class="sum-row"><span>Player</span><span>${first} ${last}</span></div>
       <div class="sum-row"><span>Parent/Guardian</span><span>${parent} (${relation})</span></div>
