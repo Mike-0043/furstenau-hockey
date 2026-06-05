@@ -487,8 +487,18 @@ p { color: var(--text); }
   overflow: hidden;
 }
 
+.about-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 14px;
+}
+
 .about-img-placeholder::before {
-  content: 'PHOTO';
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
