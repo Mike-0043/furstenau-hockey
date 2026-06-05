@@ -184,6 +184,15 @@ async function loadEvents() {
   }
 }
 
+// ── Open picker with a specific event pre-selected ──
+async function openPickerWithEvent(ev) {
+  // Pre-select this event in cart
+  _cart[ev.id] = ev;
+  updateCartBar();
+  // Open the picker — it will render with this event already checked
+  await openSessionPicker();
+}
+
 // ── Session Picker Modal ──
 let _allEvents = [];
 
@@ -421,7 +430,7 @@ function eventCard(ev) {
         <span class="event-price">${priceStr}</span>
         ${soldOut
           ? `<button class="btn btn-primary" disabled style="opacity:.4;cursor:not-allowed">Sold Out</button>`
-          : `<button class="event-select-btn" id="select-btn-${ev.id}" onclick='toggleCart(${JSON.stringify(ev)})'>Select</button>`
+          : `<button class="event-select-btn" onclick='openPickerWithEvent(${JSON.stringify(ev)})'>Book Now</button>`
         }
       </div>
     </div>
