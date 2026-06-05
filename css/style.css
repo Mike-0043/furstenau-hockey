@@ -1804,3 +1804,74 @@ cite {
   font-weight: 700;
   color: var(--white);
 }
+
+/* ── Cart Bar ── */
+.cart-bar {
+  position: sticky;
+  bottom: 24px;
+  background: var(--dark);
+  border: 1.5px solid var(--blue);
+  border-radius: 12px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 32px;
+  box-shadow: 0 8px 32px rgba(26,111,190,0.3);
+  z-index: 10;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.cart-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cart-bar-left span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cart-total {
+  font-family: var(--font-head) !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--white) !important;
+}
+
+/* Event card checkbox select */
+.event-card.selected {
+  border-color: var(--blue);
+  background: rgba(26,111,190,0.1);
+}
+
+.event-select-btn {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1.5px solid var(--blue);
+  background: transparent;
+  color: var(--blue-light);
+  transition: background var(--transition), color var(--transition);
+}
+
+.event-select-btn:hover,
+.event-select-btn.selected {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.event-select-btn.selected::before { content: '✓ '; }

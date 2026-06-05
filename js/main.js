@@ -184,6 +184,48 @@ async function loadEvents() {
   }
 }
 
+// ── Cart (multi-select) ──
+let _cart = {}; // { eventId: eventObject }
+
+function toggleCart(ev) {
+  if (_cart[ev.id]) {
+    delete _cart[ev.id];
+  } else {
+    _cart[ev.id] = ev;
+  }
+  updateCartBar();
+  // Update button state
+  const btn = document.getElementById(`select-btn-${ev.id}`);
+  const card = document.getElementById(`event-card-${ev.id}`);
+  if (btn) {
+    btn.textContent = _cart[ev.id] ? '✓ Selected' : 'Select';
+    btn.classList.toggle('selected', !!_cart[ev.id]);
+  }
+  if (card) card.classList.toggle('selected', !!_cart[ev.id]);
+}
+
+function updateCartBar() {
+  const items = Object.values(_cart);
+  const bar = document.getElementById('cart-bar');
+  const count = document.getElementById('cart-count');
+  const total = document.getElementById('cart-total');
+  if (!items.length) {
+    bar.style.display = 'none';
+    return;
+  }
+  bar.style.display = 'flex';
+  const totalCents = items.reduce((s, e) => s + e.price, 0);
+  count.textContent = `${items.length} session${items.length > 1 ? 's' : ''} selected`;
+  total.textContent = `$${(totalCents / 100).toFixed(2)}`;
+}
+
+function openBookingFromCart() {
+  const items = Object.values(_cart);
+  if (!items.length) return;
+  _currentEvent = items; // array for multi
+  openBookingModal(items);
+}
+
 function eventCard(ev) {
   const spotsLeft = ev.capacity - ev.spotsBooked;
   const pct = (ev.spotsBooked / ev.capacity) * 100;
@@ -194,7 +236,7 @@ function eventCard(ev) {
   const typeLabels = { individual:'Individual','small-group':'Small Group', camp:'Camp', clinic:'Clinic', team:'Team', 'ice-time':'Ice Time' };
 
   return `
-  <div class="event-card reveal">
+  <div class="event-card reveal" id="event-card-${ev.id}">
     <div class="event-card-header">
       <span class="event-type-badge">${typeLabels[ev.type] || ev.type}</span>
       ${soldOut ? '<span class="event-sold-out">SOLD OUT</span>' : ''}
@@ -219,42 +261,49 @@ function eventCard(ev) {
       </div>
       <div style="display:flex;align-items:center;gap:12px">
         <span class="event-price">${priceStr}</span>
-        <button class="btn btn-primary" ${soldOut ? 'disabled style="opacity:.4;cursor:not-allowed"' : `onclick='openBooking(${JSON.stringify(ev)})'`}>
-          ${soldOut ? 'Sold Out' : 'Book Now'}
-        </button>
+        ${soldOut
+          ? `<button class="btn btn-primary" disabled style="opacity:.4;cursor:not-allowed">Sold Out</button>`
+          : `<button class="event-select-btn" id="select-btn-${ev.id}" onclick='toggleCart(${JSON.stringify(ev)})'>Select</button>`
+        }
       </div>
     </div>
   </div>`;
 }
 
 // ── 3-Step Booking Flow ──
-let _currentEvent = null;
+let _currentEvent = null; // array of events
 
 function openBooking(ev) {
-  _currentEvent = ev;
-  const spotsLeft = ev.capacity - ev.spotsBooked;
-  const dateStr = new Date(ev.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-  const priceStr = `$${(ev.price/100).toFixed(2)}`;
+  // Single event select — add to cart and open
+  _cart = { [ev.id]: ev };
+  updateCartBar();
+  openBookingModal([ev]);
+}
 
-  document.getElementById('book-event-id').value = ev.id;
+function openBookingModal(events) {
+  _currentEvent = events;
+  const totalCents = events.reduce((s, e) => s + e.price, 0);
+  const priceStr = `$${(totalCents/100).toFixed(2)}`;
 
-  // Step 1 content
-  document.getElementById('booking-event-info').innerHTML = `
-    <div class="booking-event-summary">
+  // Step 1 — list all selected sessions
+  document.getElementById('booking-event-info').innerHTML = events.map(ev => {
+    const dateStr = new Date(ev.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    const spotsLeft = ev.capacity - ev.spotsBooked;
+    return `<div class="booking-event-summary" style="margin-bottom:10px">
       <strong>${ev.title}</strong>
       <span>${dateStr}${ev.time ? ' · ' + fmt12(ev.time) : ''}${ev.location ? ' · ' + ev.location : ''}</span>
-      ${ev.duration ? `<span>${ev.duration}</span>` : ''}
+      <span style="color:${spotsLeft<=3?'#e8a020':'#2ecc71'}">${spotsLeft} spot${spotsLeft!==1?'s':''} remaining · $${(ev.price/100).toFixed(0)}</span>
     </div>`;
+  }).join('');
 
   document.getElementById('booking-price-row').innerHTML = `
-    <div class="booking-price" style="margin-top:16px">Total: <strong>${priceStr}</strong></div>`;
+    <div class="booking-price" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      ${events.length > 1 ? `${events.length} sessions — ` : ''}Total: <strong>${priceStr}</strong>
+    </div>`;
 
-  document.getElementById('spots-warning').textContent =
-    spotsLeft <= 3 ? `⚡ Only ${spotsLeft} spot${spotsLeft!==1?'s':''} left!` : '';
-
+  document.getElementById('spots-warning').textContent = '';
   document.getElementById('pay-amount').textContent = priceStr;
 
-  // Reset to step 1
   goStep(1, true);
   document.getElementById('booking-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -292,15 +341,18 @@ function goStep(step, init = false) {
     err.textContent = '';
 
     // Build summary
-    const dateStr = new Date(_currentEvent.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    const events = Array.isArray(_currentEvent) ? _currentEvent : [_currentEvent];
+    const totalCents = events.reduce((s, e) => s + e.price, 0);
+    const sessionRows = events.map(ev => {
+      const d = new Date(ev.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      return `<div class="sum-row"><span>${ev.title}</span><span>${d}${ev.time ? ' · ' + fmt12(ev.time) : ''} — $${(ev.price/100).toFixed(0)}</span></div>`;
+    }).join('');
     document.getElementById('booking-summary').innerHTML = `
-      <div class="sum-row"><span>Session</span><span>${_currentEvent.title}</span></div>
-      <div class="sum-row"><span>Date</span><span>${dateStr}${_currentEvent.time ? ' · ' + fmt12(_currentEvent.time) : ''}</span></div>
-      <div class="sum-row"><span>Location</span><span>${_currentEvent.location || '—'}</span></div>
+      ${sessionRows}
       <div class="sum-row"><span>Player</span><span>${first} ${last}</span></div>
       <div class="sum-row"><span>Parent/Guardian</span><span>${parent} (${relation})</span></div>
       <div class="sum-row"><span>Contact</span><span>${email} · ${phone}</span></div>
-      <div class="sum-row sum-total"><span>Total Due</span><span>$${(_currentEvent.price/100).toFixed(2)}</span></div>`;
+      <div class="sum-row sum-total"><span>Total Due</span><span>$${(totalCents/100).toFixed(2)}</span></div>`;
   }
 
   // Mark done steps
@@ -345,12 +397,16 @@ async function submitBooking() {
   btn.disabled = true;
   err.textContent = '';
 
+  const events = Array.isArray(_currentEvent) ? _currentEvent : [_currentEvent];
+  const totalCents = events.reduce((s, e) => s + e.price, 0);
+
   try {
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        eventId: _currentEvent.id,
+        eventIds: events.map(e => e.id),
+        eventId: events[0].id, // backwards compat
         playerName,
         parentName,
         email,
@@ -361,19 +417,23 @@ async function submitBooking() {
         emergencyName: emergSame ? parentName : document.getElementById('book-emerg-name').value,
         emergencyPhone: emergSame ? phone : document.getElementById('book-emerg-phone').value,
         waiverAccepted: true,
+        totalAmount: totalCents,
       }),
     });
     const data = await res.json();
     if (data.url) {
+      // Clear cart after successful redirect
+      _cart = {};
+      updateCartBar();
       window.location.href = data.url;
     } else {
       err.textContent = data.error || 'Booking failed. Please try again.';
-      btn.textContent = `Pay Now — $${(_currentEvent.price/100).toFixed(2)} →`;
+      btn.textContent = `Pay Now — $${(totalCents/100).toFixed(2)} →`;
       btn.disabled = false;
     }
   } catch {
     err.textContent = 'Network error. Please try again.';
-    btn.textContent = `Pay Now — $${(_currentEvent.price/100).toFixed(2)} →`;
+    btn.textContent = `Pay Now — $${(totalCents/100).toFixed(2)} →`;
     btn.disabled = false;
   }
 }

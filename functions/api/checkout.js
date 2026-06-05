@@ -10,55 +10,68 @@ import { jsonResponse, errorResponse } from '../_utils.js';
 export async function onRequestPost({ request, env }) {
   try {
     const body = await request.json();
-    const { eventId, playerName, parentName, email, phone } = body;
+    const { eventId, eventIds, playerName, parentName, email, phone, dob, team, relation, emergencyName, emergencyPhone } = body;
 
-    if (!eventId || !playerName || !email) {
-      return errorResponse('Missing required fields', 400);
+    if (!playerName || !email) return errorResponse('Missing required fields', 400);
+
+    // Support multi-select: eventIds array or single eventId
+    const ids = eventIds || [eventId];
+    if (!ids || !ids.length) return errorResponse('No events selected', 400);
+
+    // Load all events
+    const events = [];
+    for (const id of ids) {
+      const ev = await env.FHD_KV.get(`event:${id}`, 'json');
+      if (!ev) return errorResponse(`Event not found: ${id}`, 404);
+      if (ev.capacity - ev.spotsBooked <= 0) return errorResponse(`"${ev.title}" is sold out`, 400);
+      events.push(ev);
     }
 
-    // Load event
-    const ev = await env.FHD_KV.get(`event:${eventId}`, 'json');
-    if (!ev) return errorResponse('Event not found', 404);
-
-    const spotsLeft = ev.capacity - ev.spotsBooked;
-    if (spotsLeft <= 0) return errorResponse('This event is sold out', 400);
-
+    const totalAmount = events.reduce((s, e) => s + e.price, 0);
     const origin = new URL(request.url).origin;
+    const titlesStr = events.map(e => e.title).join(', ');
 
     // ── MOCK MODE (no Stripe key set) ──
     if (!env.STRIPE_SECRET_KEY) {
-      const bookingId = `bk_${Date.now()}`;
-      const booking = {
-        id: bookingId, eventId, playerName, parentName: parentName || '',
-        email, phone: phone || '',
-        stripeSessionId: 'mock_' + bookingId,
-        paid: true, amount: ev.price,
-        createdAt: new Date().toISOString(),
-      };
-      await saveBooking(env, ev, booking);
-      await sendConfirmationEmail(env, ev, booking);
-      return jsonResponse({ url: `${origin}/booking-success.html?mock=1&event=${encodeURIComponent(ev.title)}&name=${encodeURIComponent(playerName)}` });
+      for (const ev of events) {
+        const bookingId = `bk_${Date.now()}_${ev.id}`;
+        const booking = {
+          id: bookingId, eventId: ev.id, playerName, parentName: parentName || '',
+          email, phone: phone || '', dob: dob || '', team: team || '',
+          relation: relation || '', emergencyName: emergencyName || '', emergencyPhone: emergencyPhone || '',
+          stripeSessionId: 'mock_' + bookingId,
+          paid: true, amount: ev.price,
+          createdAt: new Date().toISOString(),
+        };
+        await saveBooking(env, ev, booking);
+      }
+      // Send one confirmation email for all events
+      await sendConfirmationEmail(env, events, { playerName, parentName: parentName || '', email, phone: phone || '', amount: totalAmount });
+      return jsonResponse({ url: `${origin}/booking-success.html?mock=1&event=${encodeURIComponent(titlesStr)}&name=${encodeURIComponent(playerName)}` });
     }
 
     // ── REAL STRIPE MODE ──
     const metadata = { eventId, playerName, parentName: parentName || '', email, phone: phone || '' };
 
+    // Build line items for each event
     const stripeBody = new URLSearchParams({
-      'payment_method_types[]': 'card',
-      'line_items[0][price_data][currency]': 'usd',
-      'line_items[0][price_data][product_data][name]': ev.title,
-      'line_items[0][price_data][product_data][description]': `${ev.date} · ${ev.time} · ${ev.location}`,
-      'line_items[0][price_data][unit_amount]': String(ev.price),
-      'line_items[0][quantity]': '1',
       'mode': 'payment',
       'customer_email': email,
       'success_url': `${origin}/booking-success.html?session_id={CHECKOUT_SESSION_ID}`,
       'cancel_url': `${origin}/#schedule`,
-      'metadata[eventId]': eventId,
       'metadata[playerName]': playerName,
       'metadata[parentName]': parentName || '',
       'metadata[email]': email,
       'metadata[phone]': phone || '',
+      'metadata[eventIds]': ids.join(','),
+    });
+
+    events.forEach((ev, i) => {
+      stripeBody.append(`line_items[${i}][price_data][currency]`, 'usd');
+      stripeBody.append(`line_items[${i}][price_data][product_data][name]`, ev.title);
+      stripeBody.append(`line_items[${i}][price_data][product_data][description]`, `${ev.date}${ev.time ? ' · ' + ev.time : ''}${ev.location ? ' · ' + ev.location : ''}`);
+      stripeBody.append(`line_items[${i}][price_data][unit_amount]`, String(ev.price));
+      stripeBody.append(`line_items[${i}][quantity]`, '1');
     });
 
     const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -99,10 +112,16 @@ async function saveBooking(env, ev, booking) {
   await env.FHD_KV.put(`event:${ev.id}`, JSON.stringify(updatedEv));
 }
 
-async function sendConfirmationEmail(env, ev, booking) {
+async function sendConfirmationEmail(env, evOrEvents, booking) {
   if (!env.RESEND_API_KEY) return;
-  const dateStr = new Date(ev.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  const priceStr = `$${(ev.price / 100).toFixed(2)}`;
+  const events = Array.isArray(evOrEvents) ? evOrEvents : [evOrEvents];
+  const ev = events[0];
+  const totalAmount = booking.amount || events.reduce((s, e) => s + e.price, 0);
+  const priceStr = `$${(totalAmount / 100).toFixed(2)}`;
+  const sessionLines = events.map(e => {
+    const d = new Date(e.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    return `• ${e.title} — ${d}${e.time ? ' at ' + e.time : ''}${e.location ? ', ' + e.location : ''} — $${(e.price/100).toFixed(2)}`;
+  }).join('\n');
 
   // Email to Craig
   await fetch('https://api.resend.com/emails', {
@@ -111,8 +130,8 @@ async function sendConfirmationEmail(env, ev, booking) {
     body: JSON.stringify({
       from: 'Furstenau Hockey <onboarding@resend.dev>',
       to: ['craigfurstenau@hotmail.com'],
-      subject: `New Booking — ${ev.title} — ${booking.playerName}`,
-      text: `New booking received!\n\nEvent: ${ev.title}\nDate: ${dateStr} at ${ev.time}\nLocation: ${ev.location}\n\nPlayer: ${booking.playerName}\nParent/Guardian: ${booking.parentName || '—'}\nEmail: ${booking.email}\nPhone: ${booking.phone || '—'}\nAmount Paid: ${priceStr}\n\nSpots remaining: ${ev.capacity - ev.spotsBooked - 1} of ${ev.capacity}`,
+      subject: `New Booking — ${booking.playerName} — ${events.length} session${events.length>1?'s':''}`,
+      text: `New booking received!\n\nPlayer: ${booking.playerName}\nParent/Guardian: ${booking.parentName || '—'}\nEmail: ${booking.email}\nPhone: ${booking.phone || '—'}\n\nSessions Booked:\n${sessionLines}\n\nTotal Paid: ${priceStr}`,
     }),
   });
 
@@ -124,8 +143,8 @@ async function sendConfirmationEmail(env, ev, booking) {
       from: 'Furstenau Hockey <onboarding@resend.dev>',
       to: [booking.email],
       reply_to: 'craigfurstenau@hotmail.com',
-      subject: `Booking Confirmed — ${ev.title}`,
-      text: `You're booked!\n\nHi ${booking.parentName || booking.playerName},\n\nYour spot has been confirmed for:\n\n${ev.title}\n${dateStr} at ${ev.time}\n${ev.location}\n\nPlayer: ${booking.playerName}\nAmount Paid: ${priceStr}\n\nIf you have any questions, reply to this email or contact Craig directly at craigfurstenau@hotmail.com.\n\nSee you on the ice!\n— Furstenau Hockey Development`,
+      subject: `Booking Confirmed — ${events.length} session${events.length>1?'s':''} — Furstenau Hockey`,
+      text: `You're booked!\n\nHi ${booking.parentName || booking.playerName},\n\nYour spot${events.length>1?'s have':' has'} been confirmed:\n\n${sessionLines}\n\nPlayer: ${booking.playerName}\nTotal Paid: ${priceStr}\n\nIf you have any questions, reply to this email or contact Craig at craigfurstenau@hotmail.com.\n\nSee you on the ice!\n— Furstenau Hockey Development`,
     }),
   });
 }

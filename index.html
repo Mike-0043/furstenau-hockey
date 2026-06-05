@@ -486,10 +486,18 @@
       <div class="section-header reveal">
         <span class="section-label">Schedule</span>
         <h2>Open Spots &amp; Upcoming Events</h2>
-        <p class="section-intro">Book a spot directly — payment secured at checkout. Spots fill fast.</p>
+        <p class="section-intro">Select one or more sessions — pay for all at once at checkout.</p>
       </div>
       <div id="events-container">
         <div class="events-loading">Loading schedule...</div>
+      </div>
+      <!-- Cart Bar -->
+      <div class="cart-bar" id="cart-bar" style="display:none">
+        <div class="cart-bar-left">
+          <span id="cart-count">0 sessions selected</span>
+          <span class="cart-total" id="cart-total">$0.00</span>
+        </div>
+        <button class="btn btn-primary" onclick="openBookingFromCart()">Register &amp; Pay →</button>
       </div>
     </div>
   </section>
@@ -508,9 +516,9 @@
         <div class="bstep" id="bstep-3"><span>3</span> Confirm &amp; Pay</div>
       </div>
 
-      <!-- STEP 1: Session summary -->
+      <!-- STEP 1: Selected sessions summary -->
       <div class="booking-step-panel" id="bpanel-1">
-        <h3>Selected Session</h3>
+        <h3>Selected Sessions</h3>
         <div id="booking-event-info"></div>
         <div class="booking-price-row" id="booking-price-row"></div>
         <div class="spots-warning" id="spots-warning"></div>
@@ -524,23 +532,23 @@
 
         <div class="bsection-label">Player Information</div>
         <div class="form-row">
-          <div><label>Player First Name *</label><input type="text" id="book-player-first" placeholder="First Name"></div>
-          <div><label>Player Last Name *</label><input type="text" id="book-player-last" placeholder="Last Name"></div>
+          <div><label>Player First Name *</label><input type="text" id="book-player-first" placeholder="First Name" required></div>
+          <div><label>Player Last Name *</label><input type="text" id="book-player-last" placeholder="Last Name" required></div>
         </div>
         <div class="form-row">
-          <div><label>Date of Birth *</label><input type="date" id="book-dob"></div>
-          <div><label>Team / Level</label><input type="text" id="book-team" placeholder="e.g. Meijer 2007 AAA"></div>
+          <div><label>Date of Birth *</label><input type="date" id="book-dob" required></div>
+          <div><label>Team / Level *</label><input type="text" id="book-team" placeholder="e.g. Meijer 2007 AAA" required></div>
         </div>
 
         <div class="bsection-label" style="margin-top:20px">Parent / Guardian</div>
         <div class="form-row">
-          <div><label>Parent/Guardian Name *</label><input type="text" id="book-parent" placeholder="First Last"></div>
-          <div><label>Phone Number *</label><input type="tel" id="book-phone" placeholder="(555) 555-5555"></div>
+          <div><label>Parent/Guardian Name *</label><input type="text" id="book-parent" placeholder="First Last" required></div>
+          <div><label>Phone Number *</label><input type="tel" id="book-phone" placeholder="(555) 555-5555" required></div>
         </div>
         <div class="form-row">
-          <div><label>Email Address *</label><input type="email" id="book-email" placeholder="email@example.com"></div>
+          <div><label>Email Address *</label><input type="email" id="book-email" placeholder="email@example.com" required></div>
           <div><label>Relationship to Player *</label>
-            <select id="book-relation">
+            <select id="book-relation" required>
               <option value="">Select...</option>
               <option>Parent</option>
               <option>Guardian</option>
@@ -557,8 +565,8 @@
         </label>
         <div id="emergency-fields">
           <div class="form-row">
-            <div><label>Emergency Contact Name *</label><input type="text" id="book-emerg-name" placeholder="First Last"></div>
-            <div><label>Emergency Contact Phone *</label><input type="tel" id="book-emerg-phone" placeholder="(555) 555-5555"></div>
+            <div><label>Emergency Contact Name *</label><input type="text" id="book-emerg-name" placeholder="First Last" required></div>
+            <div><label>Emergency Contact Phone *</label><input type="tel" id="book-emerg-phone" placeholder="(555) 555-5555" required></div>
           </div>
         </div>
 
