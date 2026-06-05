@@ -149,6 +149,7 @@ p { color: var(--text); }
   width: auto;
   transition: transform 0.2s;
   flex-shrink: 0;
+  mix-blend-mode: screen;
 }
 .logo:hover .logo-f { transform: scale(1.06); }
 
