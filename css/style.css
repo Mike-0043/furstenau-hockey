@@ -142,20 +142,15 @@ p { color: var(--text); }
   justify-content: space-between;
 }
 
-.logo { display: flex; flex-direction: column; line-height: 1.1; }
-.logo-main {
-  font-family: var(--font-head);
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: var(--white);
+.logo { display: flex; align-items: center; }
+.logo-img {
+  height: 48px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+  transition: opacity 0.2s;
 }
-.logo-sub {
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--blue-light);
-}
+.logo:hover .logo-img { opacity: 1; }
 
 .nav-links {
   list-style: none;
