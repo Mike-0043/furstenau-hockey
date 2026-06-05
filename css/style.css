@@ -1875,3 +1875,45 @@ cite {
 }
 
 .event-select-btn.selected::before { content: '✓ '; }
+
+/* ── Schedule CTA button ── */
+.btn-schedule {
+  background: var(--gold);
+  color: var(--black);
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(232,160,32,0.4);
+  animation: pulse-gold 2.5s infinite;
+}
+
+.btn-schedule:hover {
+  background: #f5b52a;
+  box-shadow: 0 6px 28px rgba(232,160,32,0.6);
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 4px 20px rgba(232,160,32,0.4); }
+  50%       { box-shadow: 0 4px 32px rgba(232,160,32,0.7); }
+}
+
+/* ── Stat number inline ── */
+.stat-num {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1;
+}
+
+.stat-num strong {
+  font-family: var(--font-head);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.stat-num span {
+  font-family: var(--font-head);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--blue-light);
+}
