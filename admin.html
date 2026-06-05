@@ -34,7 +34,7 @@
     /* Login */
     #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh}
     .login-box{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:48px 40px;width:100%;max-width:380px;text-align:center}
-    .login-box img{height:64px;filter:brightness(0) invert(1);opacity:.9;margin-bottom:24px}
+    .login-box img{height:80px;margin-bottom:24px}
     .login-box h1{font-family:var(--font-head);font-size:22px;font-weight:700;text-transform:uppercase;color:#fff;margin-bottom:6px}
     .login-box p{font-size:12px;color:var(--text-dim);margin-bottom:28px;letter-spacing:.06em;text-transform:uppercase}
     .login-box input{margin-bottom:14px;text-align:center}
@@ -43,7 +43,7 @@
     /* App shell */
     #app{display:none}
     .app-header{background:var(--dark2);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between}
-    .app-header img{height:44px;filter:brightness(0) invert(1);opacity:.9}
+    .app-header img{height:44px;}
     .app-header span{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
     .app-body{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 60px)}
     .sidebar{background:var(--dark2);border-right:1px solid var(--border);padding:24px 0}
@@ -120,7 +120,7 @@
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <img src="images/logo.png" alt="FHD">
+    <img src="images/download.png" alt="FHD">
     <h1>Admin Panel</h1>
     <p>Furstenau Hockey Development</p>
     <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
@@ -132,7 +132,7 @@
 <!-- APP -->
 <div id="app">
   <div class="app-header">
-    <img src="images/logo.png" alt="FHD">
+    <img src="images/download.png" alt="FHD">
     <div style="display:flex;align-items:center;gap:16px">
       <span>Admin Panel</span>
       <a href="/" style="font-size:12px;color:var(--text-dim)">← View Site</a>
