@@ -131,3 +131,30 @@ async function sendConfirmationEmail(env, ev, booking) {
 }
 
 export { saveBooking, sendConfirmationEmail };
+
+/**
+ * STRIPE CONNECT — READY TO ACTIVATE
+ * 
+ * When ready to take your platform fee:
+ * 
+ * 1. Create a Stripe Connect account at stripe.com/connect
+ * 2. Get your platform's Stripe secret key
+ * 3. Add these env vars in Cloudflare Pages dashboard:
+ *    - STRIPE_SECRET_KEY = your platform Stripe secret key (sk_live_...)
+ *    - STRIPE_PLATFORM_FEE_PERCENT = 7  (or 5-8, your choice)
+ *    - CRAIG_STRIPE_ACCOUNT_ID = Craig's connected Stripe account ID (acct_...)
+ * 
+ * 4. Craig goes to your Connect onboarding link and connects his Stripe
+ * 5. Swap the stripeBody below with the CONNECT version
+ * 
+ * CONNECT VERSION (swap in when ready):
+ * 
+ * const feePercent = parseInt(env.STRIPE_PLATFORM_FEE_PERCENT || '7') / 100;
+ * const platformFee = Math.round(ev.price * feePercent); // e.g. 7% of price in cents
+ * 
+ * stripeBody.append('application_fee_amount', String(platformFee));
+ * stripeBody.append('transfer_data[destination]', env.CRAIG_STRIPE_ACCOUNT_ID);
+ * 
+ * That's it — Stripe handles the split automatically.
+ * Craig gets (price - platformFee - stripe fees), you get platformFee.
+ */
