@@ -165,6 +165,8 @@ async function loadEvents() {
     }
 
     container.innerHTML = `<div class="events-grid">${events.map(ev => eventCard(ev)).join('')}</div>`;
+    // Re-observe newly added reveal elements
+    container.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   } catch {
     container.innerHTML = `
       <div style="text-align:center;padding:48px 0;color:var(--text-dim)">
