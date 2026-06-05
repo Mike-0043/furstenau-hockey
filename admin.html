@@ -144,7 +144,9 @@
       <a href="#" class="active" onclick="showPanel('dashboard',this)">Dashboard</a>
       <a href="#" onclick="showPanel('events',this)">Events &amp; Schedule</a>
       <a href="#" onclick="showPanel('bookings',this)">Bookings</a>
+      <a href="#" onclick="showPanel('invoices',this)">Invoices</a>
       <a href="#" onclick="showPanel('new-event',this)">+ New Event</a>
+      <a href="#" onclick="showPanel('new-invoice',this)">+ New Invoice</a>
     </div>
     <div class="main">
 
@@ -266,6 +268,72 @@
             <button class="btn btn-ghost" onclick="resetEventForm()">Clear</button>
           </div>
           <p id="ev-feedback" style="margin-top:12px;font-size:13px;min-height:18px"></p>
+        </div>
+      </div>
+
+      <!-- INVOICES LIST -->
+      <div class="panel" id="panel-invoices">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Invoices</div>
+            <div class="panel-sub">All sent invoices and payment status</div>
+          </div>
+          <button class="btn btn-primary" onclick="showPanel('new-invoice',document.querySelectorAll('.sidebar a')[5])">+ New Invoice</button>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <table>
+            <thead><tr>
+              <th>Invoice #</th><th>Client</th><th>Service</th><th>Amount</th><th>Due</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody id="invoices-table">
+              <tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:24px">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NEW INVOICE -->
+      <div class="panel" id="panel-new-invoice">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">New Invoice</div>
+            <div class="panel-sub">Send a branded invoice directly to a client</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-row">
+            <div class="field">
+              <div class="field-label">Client Name *</div>
+              <input type="text" id="inv-client-name" placeholder="Parent or Organization Name">
+            </div>
+            <div class="field">
+              <div class="field-label">Client Email *</div>
+              <input type="email" id="inv-client-email" placeholder="email@example.com">
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">Service Description *</div>
+            <input type="text" id="inv-service" placeholder="e.g. Individual Skating Sessions — June 2025 (4 sessions)">
+          </div>
+          <div class="card-row">
+            <div class="field">
+              <div class="field-label">Amount (USD) *</div>
+              <input type="number" id="inv-amount" placeholder="300.00" step="0.01" min="0">
+            </div>
+            <div class="field">
+              <div class="field-label">Due Date</div>
+              <input type="date" id="inv-due-date">
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">Notes (optional)</div>
+            <textarea id="inv-notes" rows="3" placeholder="Payment instructions, thank you note, etc."></textarea>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:8px">
+            <button class="btn btn-primary" onclick="sendInvoice()">Send Invoice</button>
+            <button class="btn btn-ghost" onclick="resetInvoiceForm()">Clear</button>
+          </div>
+          <p id="inv-feedback" style="margin-top:12px;font-size:13px;min-height:18px"></p>
         </div>
       </div>
 
@@ -578,6 +646,97 @@ function showToast(msg, type = 'success') {
 document.getElementById('edit-modal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
+
+// ── Invoices ──
+async function loadInvoices() {
+  const tbody = document.getElementById('invoices-table');
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:24px">Loading...</td></tr>';
+  try {
+    const res = await fetch('/api/invoice', { credentials: 'include' });
+    const invoices = await res.json();
+    if (!invoices.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-dim);padding:24px">No invoices yet. <a href="#" onclick="showPanel(\'new-invoice\',null)">Create one →</a></td></tr>';
+      return;
+    }
+    tbody.innerHTML = invoices.map(inv => {
+      const amount = `$${(inv.amount / 100).toFixed(2)}`;
+      const due = inv.dueDate ? new Date(inv.dueDate + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+      const statusColor = inv.status === 'paid' ? '#2ecc71' : inv.status === 'sent' ? 'var(--blue-light)' : 'var(--gold)';
+      return `<tr>
+        <td><strong style="color:#fff">${inv.invoiceNumber}</strong></td>
+        <td>${inv.clientName}<br><span style="font-size:11px;color:var(--text-dim)">${inv.clientEmail}</span></td>
+        <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${inv.serviceDescription}</td>
+        <td style="color:#fff;font-weight:600">${amount}</td>
+        <td style="color:var(--text-dim)">${due}</td>
+        <td><span style="color:${statusColor};font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:0.08em">${inv.status}</span></td>
+        <td>
+          <a href="/api/invoice?id=${inv.id}" target="_blank" class="btn btn-ghost btn-sm">View</a>
+          ${inv.status !== 'paid' ? `<button class="btn btn-ghost btn-sm" style="margin-left:4px" onclick="markPaid('${inv.id}')">Mark Paid</button>` : ''}
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#e74c3c;padding:24px">Failed to load invoices.</td></tr>';
+  }
+}
+
+async function sendInvoice() {
+  const fb = document.getElementById('inv-feedback');
+  const name = document.getElementById('inv-client-name').value.trim();
+  const email = document.getElementById('inv-client-email').value.trim();
+  const service = document.getElementById('inv-service').value.trim();
+  const amount = document.getElementById('inv-amount').value;
+
+  if (!name || !email || !service || !amount) {
+    fb.style.color = '#e74c3c'; fb.textContent = 'Please fill in all required fields.'; return;
+  }
+
+  fb.style.color = 'var(--text-dim)'; fb.textContent = 'Sending invoice...';
+
+  try {
+    const res = await fetch('/api/invoice', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        clientName: name, clientEmail: email,
+        serviceDescription: service, amount,
+        dueDate: document.getElementById('inv-due-date').value,
+        notes: document.getElementById('inv-notes').value,
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      fb.style.color = '#2ecc71';
+      fb.textContent = `✓ Invoice ${data.invoiceNumber} sent to ${email}`;
+      resetInvoiceForm();
+      showToast(`Invoice ${data.invoiceNumber} sent!`, 'success');
+    } else {
+      fb.style.color = '#e74c3c'; fb.textContent = data.error || 'Failed to send invoice.';
+    }
+  } catch(e) {
+    fb.style.color = '#e74c3c'; fb.textContent = 'Network error. Try again.';
+  }
+}
+
+async function markPaid(id) {
+  const inv = await (await fetch(`/api/invoice?id=${id}`)).text();
+  // Simple KV update via a PUT-style POST with status override
+  showToast('Feature coming soon — mark paid in Stripe dashboard for now.', 'success');
+}
+
+function resetInvoiceForm() {
+  ['inv-client-name','inv-client-email','inv-service','inv-amount','inv-due-date','inv-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('inv-feedback').textContent = '';
+}
+
+// Patch showPanel to load invoices
+const _origShowPanel = showPanel;
+showPanel = function(name, link) {
+  _origShowPanel(name, link);
+  if (name === 'invoices') loadInvoices();
+};
 </script>
 </body>
 </html>
