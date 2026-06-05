@@ -244,6 +244,13 @@ async function submitBooking(e) {
   e.preventDefault();
   const btn = document.getElementById('book-submit');
   const err = document.getElementById('book-error');
+
+  // Validate waiver checkbox
+  if (!document.getElementById('waiver-agree').checked) {
+    err.textContent = 'You must read and agree to the Participation Agreement before booking.';
+    return;
+  }
+
   btn.textContent = 'Redirecting to payment...';
   btn.disabled = true;
   err.textContent = '';
@@ -258,6 +265,7 @@ async function submitBooking(e) {
         parentName: document.getElementById('book-parent').value,
         email:      document.getElementById('book-email').value,
         phone:      document.getElementById('book-phone').value,
+        waiverAccepted: true,
       }),
     });
     const data = await res.json();

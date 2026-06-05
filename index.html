@@ -511,6 +511,25 @@
           <div><label>Phone Number</label><input type="tel" id="book-phone" placeholder="(555) 555-5555"></div>
         </div>
         <div class="booking-price-row" id="booking-price-row"></div>
+
+        <!-- Waiver & Terms -->
+        <div class="waiver-box">
+          <div class="waiver-title">Participation Agreement &amp; Liability Waiver</div>
+          <div class="waiver-scroll">
+            <p><strong>EQUIPMENT REQUIREMENT</strong><br>All participants must arrive with full, appropriate hockey equipment in good condition. This includes helmet with cage/visor, shoulder pads, elbow pads, gloves, shin guards, skates, stick, and hockey pants. Players without proper equipment will not be permitted to participate and no refund will be issued.</p>
+            <p><strong>NO REFUND POLICY</strong><br>All sales are final. No refunds will be issued for any reason including illness, injury, scheduling conflicts, or no-shows.</p>
+            <p><strong>DATE CHANGE POLICY</strong><br>One date change per booking may be requested subject to availability. Date change requests must be submitted by emailing craigfurstenau@hotmail.com prior to the session. Date changes are not guaranteed and are subject to open availability only. No refund will be issued if a suitable date cannot be found.</p>
+            <p><strong>RULES OF CONDUCT</strong><br>All participants are expected to maintain a respectful, coachable attitude on and off the ice. Furstenau Hockey Development reserves the right to remove any participant for disruptive, unsafe, or disrespectful behavior without refund.</p>
+            <p><strong>LIABILITY WAIVER</strong><br>Ice hockey is a physical sport that carries inherent risks of injury. By registering, participant (or parent/guardian on behalf of a minor) acknowledges and accepts these risks. Participant releases Craig Furstenau and Furstenau Hockey Development from any and all liability for injury, illness, loss, or damage arising from participation in any training session, clinic, or camp.</p>
+            <p><strong>PHOTO/VIDEO CONSENT</strong><br>Furstenau Hockey Development may photograph or video participants during sessions for promotional use. By registering you consent to this use unless you notify Craig in writing prior to the session.</p>
+            <p><strong>MINOR PARTICIPANTS</strong><br>If the player is under 18 years of age, a parent or legal guardian must complete this registration and accepts all terms on behalf of the minor.</p>
+          </div>
+          <label class="waiver-check">
+            <input type="checkbox" id="waiver-agree" required>
+            <span>I have read and agree to the Participation Agreement, Liability Waiver, No Refund Policy, and Equipment Requirements above. If registering a minor, I confirm I am the parent or legal guardian.</span>
+          </label>
+        </div>
+
         <button type="submit" class="btn btn-primary" id="book-submit" style="width:100%;margin-top:8px">Proceed to Payment →</button>
         <p class="booking-note">🔒 Secure checkout via Stripe. Test card: 4242 4242 4242 4242</p>
         <p id="book-error" style="color:#e74c3c;font-size:13px;margin-top:8px;min-height:18px"></p>
